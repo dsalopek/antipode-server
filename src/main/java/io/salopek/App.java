@@ -47,7 +47,7 @@ public class App extends Application<AppConfiguration> {
 
 //    test
 //    test2
-    
+
     GameDataDAO gameDataDAO = jdbi.onDemand(GameDataDAO.class);
     RoundDataDAO roundDataDAO = jdbi.onDemand(RoundDataDAO.class);
     PointDataDAO pointDataDAO = jdbi.onDemand(PointDataDAO.class);
