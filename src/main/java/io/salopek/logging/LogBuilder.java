@@ -32,7 +32,7 @@ public class LogBuilder {
       sb.append(" ");
     }
 
-    return sb.toString();
+    return sb.toString().trim();
   }
 
   private void append(String s) {
