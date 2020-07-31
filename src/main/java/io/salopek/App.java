@@ -46,6 +46,7 @@ public class App extends Application<AppConfiguration> {
     final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(), "mysql");
 
 //    test
+//    test2
     
     GameDataDAO gameDataDAO = jdbi.onDemand(GameDataDAO.class);
     RoundDataDAO roundDataDAO = jdbi.onDemand(RoundDataDAO.class);
