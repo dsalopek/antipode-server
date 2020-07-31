@@ -61,6 +61,7 @@ public class GameProcessor {
 
   public RoundResponse submitRound(RoundSubmissionRequest roundSubmission) {
     LOGGER.info(LogUtils.methodEntry("submitRound"));
+//    LOGGER.atInfo().addKeyValue("test", "Hello").addKeyValue("test2", roundSubmission);
 
     processRoundSubmission(roundSubmission);
 
