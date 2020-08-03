@@ -1,6 +1,7 @@
 package io.salopek.filter;
 
 import io.salopek.logging.LogBuilder;
+import io.salopek.util.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -23,13 +24,14 @@ public class AntipodeFilter implements Filter {
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
     throws IOException, ServletException {
     if (request instanceof HttpServletRequest) {
+      long start = System.currentTimeMillis();
       MDC.clear();
       MDC.put("requestId", UUID.randomUUID().toString());
 
       String method = ((HttpServletRequest) request).getMethod();
       String uri = ((HttpServletRequest) request).getRequestURI();
 
-      LogBuilder lb = LogBuilder.get().log("Incoming Request").kv("method", method).kv("uri", uri);
+      LogBuilder lb = LogBuilder.get().log(LogUtils.methodEntry(uri)).kv("HTTPMethod", method);
 //      if(!method.equals(HttpMethod.GET)) {
 //        todo: implement wrapper to read request body that can be read multiple time
 //        see: https://stackoverflow.com/questions/10210645/http-servlet-request-lose-params-from-post-body-after-read-it-once
@@ -39,6 +41,13 @@ public class AntipodeFilter implements Filter {
       LOGGER.info(lb.build());
 
       chain.doFilter(request, response);
+
+      long duration = System.currentTimeMillis() - start;
+
+      lb.log(LogUtils.methodExit(uri)).kv("HTTPMethod", method).kv("executionTime", duration + "ms");
+      LOGGER.info(lb.build());
     }
   }
+
+
 }

@@ -1,3 +1,6 @@
+server:
+  requestLog:
+    appenders: []
 database:
   driverClass: com.mysql.cj.jdbc.Driver
   user: root

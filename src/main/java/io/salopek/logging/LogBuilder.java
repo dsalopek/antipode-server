@@ -32,10 +32,15 @@ public class LogBuilder {
       sb.append(" ");
     }
 
+    valueList.clear();
+
     return sb.toString().trim();
   }
 
   private void append(String s) {
+    if(s == null || s.isEmpty()) {
+      return;
+    }
     valueList.add(s);
   }
 }
