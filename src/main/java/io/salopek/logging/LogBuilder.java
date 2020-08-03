@@ -15,7 +15,7 @@ public class LogBuilder {
     return new LogBuilder();
   }
 
-  public LogBuilder t(String s) {
+  public LogBuilder log(String s) {
     append(s);
     return this;
   }

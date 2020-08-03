@@ -5,6 +5,7 @@ import io.salopek.db.DatabaseService;
 import io.salopek.entity.GameDataEntity;
 import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
+import io.salopek.logging.Loggable;
 import io.salopek.mapper.ModelMapper;
 import io.salopek.model.response.CompletedRoundData;
 import io.salopek.model.request.FinishGameRequest;
@@ -43,8 +44,8 @@ public class GameProcessor {
     this.databaseService = databaseService;
   }
 
+  @Loggable
   public RoundResponse newGame(NewGameRequest newGameRequest) {
-    LOGGER.info(LogUtils.methodEntry("newGame"));
 
     long gameId = saveNewGame(new GameData(newGameRequest.getPlayerName()));
     String gameUUID = UUID.randomUUID().toString();
@@ -54,14 +55,11 @@ public class GameProcessor {
     Point point = PointUtils.getRandomOrigin();
 
     RoundResponse roundResponse = new RoundResponse(gameUUID, point);
-
-    LOGGER.info(LogUtils.methodExit("newGame"));
     return roundResponse;
   }
 
+  @Loggable
   public RoundResponse submitRound(RoundSubmissionRequest roundSubmission) {
-    LOGGER.info(LogUtils.methodEntry("submitRound"));
-//    LOGGER.atInfo().addKeyValue("test", "Hello").addKeyValue("test2", roundSubmission);
 
     processRoundSubmission(roundSubmission);
 
@@ -69,17 +67,13 @@ public class GameProcessor {
 
     RoundResponse roundResponse = new RoundResponse(roundSubmission.getGameUUID(), point);
 
-    LOGGER.info(LogUtils.methodExit("submitRound"));
-
     return roundResponse;
   }
 
+  @Loggable
   public GameResultsResponse finishGame(FinishGameRequest finishGameRequest) {
-    LOGGER.info(LogUtils.methodEntry("finishGame"));
     long gameId = getGameId(finishGameRequest.getGameUUID());
-
     return buildGameResultResponse(gameId);
-
   }
 
   private void processRoundSubmission(RoundSubmissionRequest roundSubmission) {
@@ -100,6 +94,7 @@ public class GameProcessor {
     savePointsFromRound(pointMap, roundId);
   }
 
+  @Loggable
   private GameResultsResponse buildGameResultResponse(long gameId) {
     GameDataEntity gameDataEntity = updateGameData(gameId);
     String playerName = gameDataEntity.getPlayerName();
@@ -125,7 +120,6 @@ public class GameProcessor {
       completedRoundData.add(new CompletedRoundData(origin, antipode, submission, distance));
     }
 
-    LOGGER.info(LogUtils.methodExit("finishGame"));
     return new GameResultsResponse(playerName, completedRoundData, totalDistance);
   }
 

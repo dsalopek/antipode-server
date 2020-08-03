@@ -29,13 +29,13 @@ public class AntipodeFilter implements Filter {
       String method = ((HttpServletRequest) request).getMethod();
       String uri = ((HttpServletRequest) request).getRequestURI();
 
-      LogBuilder lb = LogBuilder.get().t("Incoming Request").kv("method", method).kv("uri", uri);
-      if(!method.equals(HttpMethod.GET)) {
+      LogBuilder lb = LogBuilder.get().log("Incoming Request").kv("method", method).kv("uri", uri);
+//      if(!method.equals(HttpMethod.GET)) {
 //        todo: implement wrapper to read request body that can be read multiple time
 //        see: https://stackoverflow.com/questions/10210645/http-servlet-request-lose-params-from-post-body-after-read-it-once
 
 //        lb.kv("request", request.getReader().lines().map(String::trim).collect(Collectors.joining()));
-      }
+//      }
       LOGGER.info(lb.build());
 
       chain.doFilter(request, response);
