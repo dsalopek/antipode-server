@@ -16,9 +16,9 @@
         <junit.version>5.5.2</junit.version>
         <mockito.version>3.1.0</mockito.version>
         <assertj.version>3.16.1</assertj.version>
+        <aspectj.version>1.8.9</aspectj.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>io.dropwizard</groupId>
@@ -69,12 +69,17 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-            <version>1.8.9</version>
+            <version>${aspectj.version}</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>1.8.9</version>
+            <version>${aspectj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -85,35 +90,44 @@
                 <artifactId>aspectj-maven-plugin</artifactId>
                 <version>1.11</version>
                 <configuration>
-                    <complianceLevel>1.8</complianceLevel>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <complianceLevel>${maven.compiler.source}</complianceLevel>
+                    <proc>none</proc>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.source}</target>
+                    <excludes>
+                        <exclude>**/*.java</exclude>
+                    </excludes>
+                    <forceAjcCompile>true</forceAjcCompile>
+                    <sources/>
                 </configuration>
                 <executions>
                     <execution>
+                        <id>default-compile</id>
+                        <phase>process-classes</phase>
                         <goals>
+                            <!-- use this goal to weave all your main classes -->
                             <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <weaveDirectories>
+                                <weaveDirectory>${project.build.directory}/classes</weaveDirectory>
+                            </weaveDirectories>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <!-- use this goal to weave all your test classes -->
                             <goal>test-compile</goal>
                         </goals>
+                        <configuration>
+                            <weaveDirectories>
+                                <weaveDirectory>${project.build.directory}/test-classes</weaveDirectory>
+                            </weaveDirectories>
+                        </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.mapstruct</groupId>
-                            <artifactId>mapstruct-processor</artifactId>
-                            <version>${mapstruct.version}</version>
-                        </path>
-                        <!-- other annotation processors -->
-                    </annotationProcessorPaths>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -147,6 +161,4 @@
             </plugin>
         </plugins>
     </build>
-
-
 </project>
