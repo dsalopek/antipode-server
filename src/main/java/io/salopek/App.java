@@ -42,6 +42,13 @@ public class App extends Application<AppConfiguration> {
   public void run(final AppConfiguration configuration,
     final Environment environment) {
 
+    registerJerseyComponents(environment, configuration);
+
+    environment.servlets().addFilter("InboundRequestFilter", new AntipodeFilter())
+      .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
+  }
+
+  private void registerJerseyComponents(Environment environment, AppConfiguration configuration) {
     final JdbiFactory factory = new JdbiFactory();
     final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(), "mysql");
 
@@ -68,8 +75,5 @@ public class App extends Application<AppConfiguration> {
     });
 
     environment.jersey().register(GameResource.class);
-
-    environment.servlets().addFilter("InboundRequestFilter", new AntipodeFilter())
-      .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
   }
 }

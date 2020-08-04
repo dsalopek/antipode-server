@@ -1,5 +1,6 @@
 package io.salopek.resource;
 
+import io.salopek.logging.Loggable;
 import io.salopek.model.request.FinishGameRequest;
 import io.salopek.model.response.GameResultsResponse;
 import io.salopek.model.request.NewGameRequest;
@@ -34,27 +35,18 @@ public class GameResource {
   @POST
   @Path("/newGame")
   @Produces(MediaType.APPLICATION_JSON)
+  @Loggable
   public Response newGame(@Valid NewGameRequest newGameRequest) {
-    MDC.put("requestId", String.valueOf(UUID.randomUUID()));
-    LOGGER.info(LogUtils.methodEntry("newGame"));
-    LOGGER.info(LogUtils.logObject("newGameRequest", newGameRequest));
-
     RoundResponse roundResponse = gameProcessor.newGame(newGameRequest);
-
-    LOGGER.info(LogUtils.methodExit("newGame"));
     return Response.ok(roundResponse).build();
   }
 
   @POST
   @Path("/submitRound")
   @Produces(MediaType.APPLICATION_JSON)
+  @Loggable
   public Response submitRound(RoundSubmissionRequest roundSubmission) {
-    LOGGER.info(LogUtils.methodEntry("submitRound"));
-    LOGGER.info(LogUtils.logObject("roundSubmission", roundSubmission));
-
     RoundResponse roundResponse = gameProcessor.submitRound(roundSubmission);
-
-    LOGGER.info(LogUtils.methodExit("submitRound"));
     return Response.ok(roundResponse).build();
 
   }
@@ -62,6 +54,7 @@ public class GameResource {
   @POST
   @Path("/finishGame")
   @Produces(MediaType.APPLICATION_JSON)
+  @Loggable
   public Response finishGame(FinishGameRequest finishGameRequest) {
     GameResultsResponse gameResultsResponse = gameProcessor.finishGame(finishGameRequest);
 

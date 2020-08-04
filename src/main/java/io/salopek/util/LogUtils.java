@@ -18,10 +18,15 @@ public class LogUtils {
   }
 
   public static String logObject(String key, Object value) {
-    return key + DELIMITER + (null == value ? "null" : value.toString());
+    return key + DELIMITER + (null == value ? "null" : replaceNewLine(value.toString()));
   }
 
   private static String methodLog(String prefix, String methodName) {
     return prefix + SPACE + METHOD + DELIMITER + methodName;
+  }
+
+  private static String replaceNewLine(String s) {
+//    return s.replaceAll("[\\n+]", "");
+    return s;
   }
 }

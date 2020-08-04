@@ -98,7 +98,7 @@ class GameProcessorTest {
 
     GameResultsResponse actualResponse = gameProcessor.finishGame(finishGameRequest);
 
-    assertThat(actualResponse.getPlayName()).isEqualTo(expectedPlayerName);
+    assertThat(actualResponse.getPlayerName()).isEqualTo(expectedPlayerName);
     assertThat(actualResponse.getTotalDistance()).isEqualTo(expectedTotalDistance);
     assertThat(actualResponse.getCompletedRoundData().size()).isEqualTo(3);
 
