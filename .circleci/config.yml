@@ -6,20 +6,37 @@ jobs: # a collection of steps
     working_directory: ~/antipode
     steps:
       - checkout
-      - restore_cache: 
+      - restore_cache:
           key: antipode-{{ checksum "pom.xml" }}
-      - run: mvn dependency:go-offline   
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: antipode-{{ checksum "pom.xml" }}
-      - run: mvn package
-      
-      - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard. 
-      # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+      - run:
+          name: MVN Go Offline
+          command: mvn dependency:go-offline
+        - save_cache:
+            paths:
+              - ~/.m2
+            key: antipode-{{ checksum "pom.xml" }}
+      - run:
+          name: MVN Package
+          command: mvn package
+          when: always
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+            ./cc-test-reporter before-build
+          when: always
+      - run:
+          name: Send coverage report to Code Climate
+          command:
+            # nyc report requires that nyc has already been run,
+            # which creates the .nyc_output folder containing necessary data
+            ./cc-test-reporter after-build
+          when: always
+      - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
+          # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: target/surefire-reports
-      
       - store_artifacts: # store the uberjar as an artifact
-      # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: target/antipode-1.0-SNAPSHOT.jar
-      # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples    
+      # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
