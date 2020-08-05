@@ -43,8 +43,8 @@ class GameProcessorTest {
     when(databaseService.saveNewGame(any())).thenReturn(1L);
     RoundResponse actualResponse = gameProcessor.newGame(newGameRequest);
 
-    assertThat(actualResponse.getGameUUID() != null).isTrue();
-    assertThat(actualResponse.getOrigin() != null).isTrue();
+    assertThat(actualResponse.getGameUUID()).isNotNull();
+    assertThat(actualResponse.getOrigin()).isNotNull();
   }
 
   @Test
@@ -61,8 +61,8 @@ class GameProcessorTest {
 
     RoundResponse actualResponse = gameProcessor.submitRound(roundSubmission);
 
-    assertThat(actualResponse.getGameUUID() != null);
-    assertThat(actualResponse.getOrigin() != null);
+    assertThat(actualResponse.getGameUUID()).isNotNull();
+    assertThat(actualResponse.getOrigin()).isNotNull();
   }
 
   @Test
@@ -103,9 +103,9 @@ class GameProcessorTest {
     assertThat(actualResponse.getCompletedRoundData().size()).isEqualTo(3);
 
     for(CompletedRoundData roundData : actualResponse.getCompletedRoundData()) {
-      assertThat(roundData.getOrigin() !=null);
-      assertThat(roundData.getAntipode() !=null);
-      assertThat(roundData.getSubmission() !=null);
+      assertThat(roundData.getOrigin()).isNotNull();
+      assertThat(roundData.getAntipode()).isNotNull();
+      assertThat(roundData.getSubmission()).isNotNull();
     }
   }
 

@@ -2,7 +2,9 @@ package io.salopek.logging;
 
 public class LogUtils {
 
-  private static final String PARENS = "()";
+  private LogUtils() {
+  }
+
   private static final String SPACE = " ";
   private static final String ENTRY = "[ENTRY]";
   private static final String EXIT = "[EXIT]";

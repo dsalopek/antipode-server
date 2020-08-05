@@ -37,7 +37,6 @@ public class App extends Application<AppConfiguration> {
 
   @Override
   public void initialize(final Bootstrap<AppConfiguration> bootstrap) {
-    // TODO: application initialization
     bootstrap.setConfigurationSourceProvider(new SubstitutingSourceProvider(
       bootstrap.getConfigurationSourceProvider(),
       new EnvironmentVariableSubstitutor(false)));

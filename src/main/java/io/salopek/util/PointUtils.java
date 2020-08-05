@@ -14,10 +14,13 @@ import static io.salopek.constant.AntipodeConstants.LONGITUDE;
 
 public class PointUtils {
 
+  private PointUtils() {
+  }
+
   private static final Logger LOGGER = LoggerFactory.getLogger(PointUtils.class);
 
   @Loggable
-  public static Point getRandomOrigin() throws IllegalArgumentException {
+  public static Point getRandomOrigin() {
     double latitude = RandomUtils.getRandomLatitude();
     double longitude = RandomUtils.getRandomLongitude();
     Point randomOrigin = new Point(longitude, latitude);
@@ -27,7 +30,7 @@ public class PointUtils {
   }
 
   @Loggable
-  public static Point calculateAntipode(Point origin) throws IllegalArgumentException {
+  public static Point calculateAntipode(Point origin) {
     if (null == origin) {
       LOGGER.error("Origin is null");
       throw new IllegalArgumentException(EXC_ORIGIN_REQUIRED);
@@ -42,13 +45,13 @@ public class PointUtils {
     return antipode;
   }
 
-  public static void validateLongitude(double longitude) throws IllegalArgumentException {
+  public static void validateLongitude(double longitude) {
     if (LONGITUDE < Math.abs(longitude)) {
       throw new IllegalArgumentException(EXC_LONGITUDE_INVALID);
     }
   }
 
-  public static void validateLatitude(double latitude) throws IllegalArgumentException {
+  public static void validateLatitude(double latitude) {
     if (LATITUDE < Math.abs(latitude)) {
       throw new IllegalArgumentException(EXC_LATITUDE_INVALID);
     }

@@ -9,10 +9,11 @@ import org.slf4j.LoggerFactory;
 
 @Aspect
 public class LoggingAspect {
-  Logger LOGGER = LoggerFactory.getLogger(LoggingAspect.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspect.class);
 
   @Pointcut("@annotation(io.salopek.logging.Loggable) && execution(* *(..))")
   private void loggingTargets() {
+    //    empty
   }
 
   @Around("loggingTargets()")

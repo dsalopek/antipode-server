@@ -70,8 +70,8 @@ public class MultiReadHttpServletResponseWrapper extends HttpServletResponseWrap
 
   public class CachedServletOutputStream extends ServletOutputStream {
 
-    private OutputStream outputStream;
-    private ByteArrayOutputStream copy;
+    private final OutputStream outputStream;
+    private final ByteArrayOutputStream copy;
 
     public CachedServletOutputStream(OutputStream outputStream) {
       this.outputStream = outputStream;
@@ -95,7 +95,7 @@ public class MultiReadHttpServletResponseWrapper extends HttpServletResponseWrap
 
     @Override
     public void setWriteListener(WriteListener writeListener) {
-
+      //      nop
     }
   }
 

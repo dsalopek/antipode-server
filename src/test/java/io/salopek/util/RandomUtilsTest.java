@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RandomUtilsTest {
+class RandomUtilsTest {
   @Test
   void validRandomLongitude() {
     for (int i = 0; i < 25; i++) {

@@ -38,7 +38,7 @@ public class MultiReadHttpServletRequestWrapper extends HttpServletRequestWrappe
   }
 
   public class CachedServletInputStream extends ServletInputStream {
-    private ByteArrayInputStream input;
+    private final ByteArrayInputStream input;
 
     public CachedServletInputStream() {
       this.input = new ByteArrayInputStream(cachedBytes.toByteArray());
@@ -56,7 +56,7 @@ public class MultiReadHttpServletRequestWrapper extends HttpServletRequestWrappe
 
     @Override
     public void setReadListener(ReadListener readListener) {
-
+      //      nop
     }
 
     @Override

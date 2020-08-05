@@ -14,7 +14,7 @@ class PointUtilsTest {
   void getRandomOrigin() {
     Point actualOrigin = PointUtils.getRandomOrigin();
 
-    assertThat(actualOrigin != null);
+    assertThat(actualOrigin).isNotNull();
   }
 
   @Test

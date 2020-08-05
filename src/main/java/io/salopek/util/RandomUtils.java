@@ -6,6 +6,10 @@ import static io.salopek.constant.AntipodeConstants.LATITUDE;
 import static io.salopek.constant.AntipodeConstants.LONGITUDE;
 
 public class RandomUtils {
+
+  private RandomUtils() {
+  }
+
   private static final Random random = new Random();
 
   public static double getRandomLatitude() {

@@ -23,7 +23,7 @@ class HaversineDistanceCalculatorTest {
 
     HaversineDistanceCalculator distanceCalculator = new HaversineDistanceCalculator();
 
-    assertThat(distanceCalculator.getDistance(pointA, pointA)).isEqualTo(0);
+    assertThat(distanceCalculator.getDistance(pointA, pointA)).isZero();
   }
 
 }

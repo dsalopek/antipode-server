@@ -38,8 +38,8 @@ public class AntipodeFilter implements Filter {
       MultiReadHttpServletResponseWrapper wrappedResponse = new MultiReadHttpServletResponseWrapper(
         (HttpServletResponse) response);
 
-      String method = ((HttpServletRequest) wrappedRequest).getMethod();
-      String uri = ((HttpServletRequest) wrappedRequest).getRequestURI();
+      String method = wrappedRequest.getMethod();
+      String uri = wrappedRequest.getRequestURI();
 
       LogBuilder lb = LogBuilder.get().log(LogUtils.methodEntry(uri)).kv("HTTPMethod", method);
       if (!method.equals(HttpMethod.GET)) {
