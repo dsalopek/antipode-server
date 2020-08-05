@@ -11,10 +11,10 @@ jobs: # a collection of steps
       - run:
           name: MVN Go Offline
           command: mvn dependency:go-offline
-        - save_cache:
-            paths:
-              - ~/.m2
-            key: antipode-{{ checksum "pom.xml" }}
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: antipode-{{ checksum "pom.xml" }}
       - run:
           name: MVN Package
           command: mvn package
