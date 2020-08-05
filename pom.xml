@@ -17,6 +17,7 @@
         <mockito.version>3.1.0</mockito.version>
         <assertj.version>3.16.1</assertj.version>
         <aspectj.version>1.8.9</aspectj.version>
+        <apache.commons.version>2.7</apache.commons.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
@@ -81,6 +82,13 @@
             <artifactId>aspectjweaver</artifactId>
             <version>${aspectj.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${apache.commons.version}</version>
+        </dependency>
+
     </dependencies>
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>

@@ -27,9 +27,6 @@ import java.util.EnumSet;
 
 public class App extends Application<AppConfiguration> {
   public static void main(final String[] args) throws Exception {
-
-    System.out.println(System.getenv("DB_USER"));
-
     new App().run(args);
   }
 
