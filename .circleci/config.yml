@@ -19,6 +19,10 @@ jobs: # a collection of steps
           name: MVN Package
           command: mvn package
           when: always
+      - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
+          # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: target/site/jacoco/jacoco.xml
+          prefix: tests
       - run:
           name: Setup Code Climate test-reporter
           command: |
@@ -33,10 +37,6 @@ jobs: # a collection of steps
             # which creates the .nyc_output folder containing necessary data
             ./cc-test-reporter after-build -t jacoco
           when: always
-      - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
-          # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: target/site/jacoco/jacoco.xml
-          prefix: tests
       - store_artifacts: # store the uberjar as an artifact
           # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: target/antipode-1.0-SNAPSHOT.jar
