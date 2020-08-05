@@ -1,7 +1,9 @@
 package io.salopek.filter;
 
+import io.salopek.http.MultiReadHttpServletRequestWrapper;
+import io.salopek.http.MultiReadHttpServletResponseWrapper;
 import io.salopek.logging.LogBuilder;
-import io.salopek.util.LogUtils;
+import io.salopek.logging.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -12,9 +14,11 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.HttpMethod;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class AntipodeFilter implements Filter {
 
@@ -28,26 +32,28 @@ public class AntipodeFilter implements Filter {
       MDC.clear();
       MDC.put("requestId", UUID.randomUUID().toString());
 
-      String method = ((HttpServletRequest) request).getMethod();
-      String uri = ((HttpServletRequest) request).getRequestURI();
+      MultiReadHttpServletRequestWrapper wrappedRequest = new MultiReadHttpServletRequestWrapper(
+        (HttpServletRequest) request);
+
+      MultiReadHttpServletResponseWrapper wrappedResponse = new MultiReadHttpServletResponseWrapper(
+        (HttpServletResponse) response);
+
+      String method = wrappedRequest.getMethod();
+      String uri = wrappedRequest.getRequestURI();
 
       LogBuilder lb = LogBuilder.get().log(LogUtils.methodEntry(uri)).kv("HTTPMethod", method);
-//      if(!method.equals(HttpMethod.GET)) {
-//        todo: implement wrapper to read request body that can be read multiple time
-//        see: https://stackoverflow.com/questions/10210645/http-servlet-request-lose-params-from-post-body-after-read-it-once
-
-//        lb.kv("request", request.getReader().lines().map(String::trim).collect(Collectors.joining()));
-//      }
+      if (!method.equals(HttpMethod.GET)) {
+        lb.kv("request", wrappedRequest.getReader().lines().map(String::trim).collect(Collectors.joining()));
+      }
       LOGGER.info(lb.build());
 
-      chain.doFilter(request, response);
+      chain.doFilter(wrappedRequest, wrappedResponse);
 
       long duration = System.currentTimeMillis() - start;
 
-      lb.log(LogUtils.methodExit(uri)).kv("HTTPMethod", method).kv("executionTime", duration + "ms");
+      lb.log(LogUtils.methodExit(uri, duration)).kv("response",
+        new String(wrappedResponse.getCopy()));
       LOGGER.info(lb.build());
     }
   }
-
-
 }

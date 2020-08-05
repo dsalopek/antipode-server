@@ -5,16 +5,8 @@ import io.salopek.model.Point;
 import java.text.DecimalFormat;
 
 public class HaversineDistanceCalculator implements DistanceCalculator {
-
-  //  Haversine
-  //  formula:	a = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2)
-  //  c = 2 ⋅ atan2( √a, √(1−a) )
-  //  d = R ⋅ c
-  //  where	φ is latitude, λ is longitude, R is earth’s radius (mean radius = 6,371km);
-  //  note that angles need to be in radians to pass to trig functions!
   // https://www.movable-type.co.uk/scripts/latlong.html
-
-  private static final double earthRadiusFeet = 20902e3;
+  private static final double EARTH_RADIUS_FEET = 20902e3;
 
   @Override
   public double getDistance(Point pointA, Point pointB) {
@@ -34,7 +26,7 @@ public class HaversineDistanceCalculator implements DistanceCalculator {
       .sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
     double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    return round(earthRadiusFeet * c);
+    return round(EARTH_RADIUS_FEET * c);
   }
 
   private double round(double input) {

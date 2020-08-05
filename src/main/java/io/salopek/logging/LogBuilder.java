@@ -1,15 +1,14 @@
 package io.salopek.logging;
 
-import io.salopek.util.LogUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class LogBuilder {
 
-  private List<String> valueList = new ArrayList<>();
+  private final List<String> valueList = new ArrayList<>();
 
-  private LogBuilder() {}
+  private LogBuilder() {
+  }
 
   public static LogBuilder get() {
     return new LogBuilder();
@@ -27,7 +26,7 @@ public class LogBuilder {
 
   public String build() {
     StringBuilder sb = new StringBuilder();
-    for(String val : valueList) {
+    for (String val : valueList) {
       sb.append(val);
       sb.append(" ");
     }
@@ -38,7 +37,7 @@ public class LogBuilder {
   }
 
   private void append(String s) {
-    if(s == null || s.isEmpty()) {
+    if (s == null || s.isEmpty()) {
       return;
     }
     valueList.add(s);

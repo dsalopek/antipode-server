@@ -9,7 +9,7 @@ public class Point {
   public Point() {
   }
 
-  public Point(double longitude, double latitude) throws IllegalArgumentException {
+  public Point(double longitude, double latitude) {
     setLongitude(longitude);
     setLatitude(latitude);
   }
@@ -18,7 +18,7 @@ public class Point {
     return longitude;
   }
 
-  public void setLongitude(double longitude) throws IllegalArgumentException {
+  public void setLongitude(double longitude) {
     PointUtils.validateLongitude(longitude);
     this.longitude = longitude;
   }
@@ -27,7 +27,7 @@ public class Point {
     return latitude;
   }
 
-  public void setLatitude(double latitude) throws IllegalArgumentException {
+  public void setLatitude(double latitude) {
     PointUtils.validateLatitude(latitude);
     this.latitude = latitude;
   }
