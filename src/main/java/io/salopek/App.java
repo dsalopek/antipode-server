@@ -1,6 +1,8 @@
 package io.salopek;
 
 import io.dropwizard.Application;
+import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
+import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import io.dropwizard.setup.Bootstrap;
@@ -25,6 +27,9 @@ import java.util.EnumSet;
 
 public class App extends Application<AppConfiguration> {
   public static void main(final String[] args) throws Exception {
+
+    System.out.println(System.getenv("DB_USER"));
+
     new App().run(args);
   }
 
@@ -36,6 +41,9 @@ public class App extends Application<AppConfiguration> {
   @Override
   public void initialize(final Bootstrap<AppConfiguration> bootstrap) {
     // TODO: application initialization
+    bootstrap.setConfigurationSourceProvider(new SubstitutingSourceProvider(
+      bootstrap.getConfigurationSourceProvider(),
+      new EnvironmentVariableSubstitutor(false)));
   }
 
   @Override
