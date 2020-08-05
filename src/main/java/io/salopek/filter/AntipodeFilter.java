@@ -12,7 +12,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.HttpMethod;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -32,12 +31,12 @@ public class AntipodeFilter implements Filter {
       String uri = ((HttpServletRequest) request).getRequestURI();
 
       LogBuilder lb = LogBuilder.get().log(LogUtils.methodEntry(uri)).kv("HTTPMethod", method);
-//      if(!method.equals(HttpMethod.GET)) {
-//        todo: implement wrapper to read request body that can be read multiple time
-//        see: https://stackoverflow.com/questions/10210645/http-servlet-request-lose-params-from-post-body-after-read-it-once
+      //      if(!method.equals(HttpMethod.GET)) {
+      //        todo: implement wrapper to read request body that can be read multiple time
+      //        see: https://stackoverflow.com/questions/10210645/http-servlet-request-lose-params-from-post-body-after-read-it-once
 
-//        lb.kv("request", request.getReader().lines().map(String::trim).collect(Collectors.joining()));
-//      }
+      //        lb.kv("request", request.getReader().lines().map(String::trim).collect(Collectors.joining()));
+      //      }
       LOGGER.info(lb.build());
 
       chain.doFilter(request, response);
@@ -48,6 +47,5 @@ public class AntipodeFilter implements Filter {
       LOGGER.info(lb.build());
     }
   }
-
 
 }

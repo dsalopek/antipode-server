@@ -2,15 +2,13 @@ package io.salopek.resource;
 
 import io.salopek.logging.Loggable;
 import io.salopek.model.request.FinishGameRequest;
-import io.salopek.model.response.GameResultsResponse;
 import io.salopek.model.request.NewGameRequest;
-import io.salopek.model.response.RoundResponse;
 import io.salopek.model.request.RoundSubmissionRequest;
+import io.salopek.model.response.GameResultsResponse;
+import io.salopek.model.response.RoundResponse;
 import io.salopek.processor.GameProcessor;
-import io.salopek.util.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -19,7 +17,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.UUID;
 
 @Path("/game")
 public class GameResource {

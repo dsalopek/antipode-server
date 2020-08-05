@@ -26,7 +26,7 @@ public class LogUtils {
   }
 
   private static String replaceNewLine(String s) {
-//    return s.replaceAll("[\\n+]", "");
+    //    return s.replaceAll("[\\n+]", "");
     return s;
   }
 }

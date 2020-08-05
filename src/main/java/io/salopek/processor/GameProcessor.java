@@ -7,16 +7,15 @@ import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
 import io.salopek.logging.Loggable;
 import io.salopek.mapper.ModelMapper;
-import io.salopek.model.response.CompletedRoundData;
-import io.salopek.model.request.FinishGameRequest;
 import io.salopek.model.GameData;
-import io.salopek.model.response.GameResultsResponse;
-import io.salopek.model.request.NewGameRequest;
 import io.salopek.model.Point;
-import io.salopek.model.response.RoundResponse;
+import io.salopek.model.request.FinishGameRequest;
+import io.salopek.model.request.NewGameRequest;
 import io.salopek.model.request.RoundSubmissionRequest;
+import io.salopek.model.response.CompletedRoundData;
+import io.salopek.model.response.GameResultsResponse;
+import io.salopek.model.response.RoundResponse;
 import io.salopek.util.DistanceCalculator;
-import io.salopek.util.LogUtils;
 import io.salopek.util.PointUtils;
 import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
@@ -36,7 +35,7 @@ public class GameProcessor {
   private static final Logger LOGGER = LoggerFactory.getLogger(GameProcessor.class);
   private final DistanceCalculator distanceCalculator;
   private final DatabaseService databaseService;
-  private  static final ModelMapper MAPPER = Mappers.getMapper(ModelMapper.class);
+  private static final ModelMapper MAPPER = Mappers.getMapper(ModelMapper.class);
 
   @Inject
   public GameProcessor(DistanceCalculator distanceCalculator, DatabaseService databaseService) {
