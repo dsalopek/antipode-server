@@ -27,12 +27,19 @@ jobs: # a collection of steps
             ./cc-test-reporter before-build
           when: always
       - run:
-          name: Send coverage report to Code Climate
-          command:
-            # nyc report requires that nyc has already been run,
-            # which creates the .nyc_output folder containing necessary data
-            ./cc-test-reporter after-build -t jacoco
-          when: always
+          name: Set jacoco.xml path for code climate
+          command: JACOCO_SOURCE_PATH=src/main/java ./cc-test-reporter format-coverage target/site/jacoco/jacoco.xml --input-type jacoco
+      - run:
+          name: Upload code climate report
+          command: ./cc-test-reporter upload-coverage -r $CC_TEST_REPORTER_ID
+          when: on_success
+#      - run:
+#          name: Send coverage report to Code Climate
+#          command:
+#            # nyc report requires that nyc has already been run,
+#            # which creates the .nyc_output folder containing necessary data
+#            ./cc-test-reporter after-build -t jacoco
+#          when: always
       - store_artifacts: # store the uberjar as an artifact
           # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: target/site/jacoco/jacoco.xml
