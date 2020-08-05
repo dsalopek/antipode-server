@@ -3,7 +3,7 @@ package io.salopek.filter;
 import io.salopek.http.MultiReadHttpServletRequestWrapper;
 import io.salopek.http.MultiReadHttpServletResponseWrapper;
 import io.salopek.logging.LogBuilder;
-import io.salopek.util.LogUtils;
+import io.salopek.logging.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -51,7 +51,7 @@ public class AntipodeFilter implements Filter {
 
       long duration = System.currentTimeMillis() - start;
 
-      lb.log(LogUtils.methodExit(uri)).kv("HTTPMethod", method).kv("executionTime", duration + "ms").kv("response",
+      lb.log(LogUtils.methodExit(uri, duration)).kv("response",
         new String(wrappedResponse.getCopy()));
       LOGGER.info(lb.build());
     }

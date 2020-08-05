@@ -10,6 +10,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
+import static io.salopek.constant.AntipodeConstants.EXC_GET_OUTPUTSTREAM;
+import static io.salopek.constant.AntipodeConstants.EXC_GET_WRITER;
+
 public class MultiReadHttpServletResponseWrapper extends HttpServletResponseWrapper {
 
   private ServletOutputStream outputStream;
@@ -23,7 +26,7 @@ public class MultiReadHttpServletResponseWrapper extends HttpServletResponseWrap
   @Override
   public ServletOutputStream getOutputStream() throws IOException {
     if (writer != null) {
-      throw new IllegalStateException("getWriter() has already been called on this response.");
+      throw new IllegalStateException(EXC_GET_WRITER);
     }
 
     if (outputStream == null) {
@@ -37,7 +40,7 @@ public class MultiReadHttpServletResponseWrapper extends HttpServletResponseWrap
   @Override
   public PrintWriter getWriter() throws IOException {
     if (outputStream != null) {
-      throw new IllegalStateException("getOutputStream() has already been called on this response.");
+      throw new IllegalStateException(EXC_GET_OUTPUTSTREAM);
     }
 
     if (writer == null) {

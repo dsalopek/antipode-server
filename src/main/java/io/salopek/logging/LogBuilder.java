@@ -1,7 +1,5 @@
 package io.salopek.logging;
 
-import io.salopek.util.LogUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 

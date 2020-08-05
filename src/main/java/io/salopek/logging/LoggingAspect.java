@@ -1,6 +1,5 @@
 package io.salopek.logging;
 
-import io.salopek.util.LogUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -26,7 +25,7 @@ public class LoggingAspect {
     Object result = joinPoint.proceed();
     long duration = System.currentTimeMillis() - start;
 
-    lb.log(LogUtils.methodExit(method)).kv("executionTime", duration + "ms");
+    lb.log(LogUtils.methodExit(method, duration));
     LOGGER.info(lb.build());
     return result;
   }

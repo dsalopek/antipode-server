@@ -17,7 +17,7 @@ database:
   evictionInterval: 10s
   minIdleTime: 1 minute
 logging:
-  level: INFO
+  level: ALL
   appenders:
     - type: console
       threshold: ALL
