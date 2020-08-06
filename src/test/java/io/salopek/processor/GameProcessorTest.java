@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -63,6 +64,23 @@ class GameProcessorTest {
 
     assertThat(actualResponse.getGameUUID()).isNotNull();
     assertThat(actualResponse.getOrigin()).isNotNull();
+  }
+
+  @Test
+  void utilizeGameIdCache() {
+    NewGameRequest newGameRequest = new NewGameRequest("Dylan");
+    when(databaseService.saveNewGame(any())).thenReturn(1L);
+
+    Point antipode = antipode();
+    Point origin = antipode();
+
+    when(distanceCalculator.getDistance(any(), any())).thenReturn(10000d);
+    when(databaseService.saveNewRound(any())).thenReturn(1L);
+    when(databaseService.getGameId(anyString())).thenReturn(1L);
+    when(databaseService.saveNewPoint(any())).thenReturn(1L);
+    RoundResponse newGameResponse = gameProcessor.newGame(newGameRequest);
+    RoundSubmissionRequest roundSubmission = new RoundSubmissionRequest(newGameResponse.getGameUUID(), origin, antipode);
+    assertDoesNotThrow(() -> gameProcessor.submitRound(roundSubmission));
   }
 
   @Test

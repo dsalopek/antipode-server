@@ -37,9 +37,8 @@ public class LogBuilder {
   }
 
   private void append(String s) {
-    if (s == null || s.isEmpty()) {
-      return;
+    if (null != s && !s.isEmpty()) {
+      valueList.add(s);
     }
-    valueList.add(s);
   }
 }

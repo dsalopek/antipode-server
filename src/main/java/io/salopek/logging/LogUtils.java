@@ -26,7 +26,11 @@ public class LogUtils {
   }
 
   public static String logObject(String key, Object value) {
-    return append(key, DELIMITER, (null == value ? "null" : replaceNewLine(value.toString())));
+    if(null == key || key.isEmpty()) {
+      return "";
+    } else {
+      return append(key, DELIMITER, (null == value ? "null" : replaceNewLine(value.toString())));
+    }
   }
 
   private static String methodLog(String prefix, String methodName) {
