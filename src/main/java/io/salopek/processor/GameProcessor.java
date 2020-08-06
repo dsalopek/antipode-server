@@ -27,25 +27,27 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 public class GameProcessor {
   private final DistanceCalculator distanceCalculator;
   private final DatabaseService databaseService;
+  private final ConcurrentMap<String, Long> gameIdCache;
   private static final ModelMapper MAPPER = Mappers.getMapper(ModelMapper.class);
 
   @Inject
   public GameProcessor(DistanceCalculator distanceCalculator, DatabaseService databaseService) {
     this.distanceCalculator = distanceCalculator;
     this.databaseService = databaseService;
+    this.gameIdCache = new ConcurrentHashMap<>();
   }
 
   @Loggable
   public RoundResponse newGame(NewGameRequest newGameRequest) {
-    long gameId = saveNewGame(new GameData(newGameRequest.getPlayerName()));
-    String gameUUID = UUID.randomUUID().toString();
+    String gameUUID = saveNewGame(new GameData(newGameRequest.getPlayerName()));
 
-    saveNewGameUUID(gameId, gameUUID);
     Point point = PointUtils.getRandomOrigin();
 
     return new RoundResponse(gameUUID, point);
@@ -62,7 +64,11 @@ public class GameProcessor {
 
   @Loggable
   public GameResultsResponse finishGame(FinishGameRequest finishGameRequest) {
-    long gameId = getGameId(finishGameRequest.getGameUUID());
+    String gameUUID = finishGameRequest.getGameUUID();
+    long gameId = getGameId(gameUUID);
+
+    gameIdCache.remove(gameUUID);
+
     return buildGameResultResponse(gameId);
   }
 
@@ -121,9 +127,14 @@ public class GameProcessor {
     return gameDataEntity;
   }
 
-  private long saveNewGame(GameData gameData) {
+  private String saveNewGame(GameData gameData) {
     GameDataEntity gameDataEntity = MAPPER.toGameDataEntity(gameData);
-    return databaseService.saveNewGame(gameDataEntity);
+    String gameUUID = UUID.randomUUID().toString();
+
+    long gameId = databaseService.saveNewGame(gameDataEntity);
+    saveNewGameUUID(gameId, gameUUID);
+
+    return gameUUID;
   }
 
   private void saveGameData(GameDataEntity gameDataEntity) {
@@ -149,10 +160,15 @@ public class GameProcessor {
   }
 
   private void saveNewGameUUID(long gameId, String gameUUID) {
+    gameIdCache.put(gameUUID, gameId);
     databaseService.saveNewGameId(gameId, gameUUID);
   }
 
   private long getGameId(String gameUUID) {
-    return databaseService.getGameId(gameUUID);
+    if (gameIdCache.containsKey(gameUUID)) {
+      return gameIdCache.get(gameUUID);
+    } else {
+      return databaseService.getGameId(gameUUID);
+    }
   }
 }

@@ -176,6 +176,7 @@
                     <excludes>
                         <exclude>io/salopek/entity/**/*</exclude>
                         <exclude>io/salopek/model/**/*</exclude>
+                        <exclude>**/*LoggingAspect.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>
