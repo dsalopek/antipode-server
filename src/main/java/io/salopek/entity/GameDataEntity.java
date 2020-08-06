@@ -13,14 +13,11 @@ public class GameDataEntity {
   }
 
   public GameDataEntity(String playerName) {
-    this.playerName = playerName;
-    this.startTime = Timestamp.from(Instant.now());
+    this(0L, playerName, Timestamp.from(Instant.now()), null);
   }
 
   public GameDataEntity(String playerName, Timestamp startTime, Timestamp endTime) {
-    this.playerName = playerName;
-    this.startTime = startTime;
-    this.endTime = endTime;
+    this(0L, playerName, startTime, endTime);
   }
 
   public GameDataEntity(long gameId, String playerName, Timestamp startTime, Timestamp endTime) {

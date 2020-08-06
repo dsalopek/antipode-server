@@ -13,19 +13,15 @@ public class PointEntity {
   }
 
   public PointEntity(double latitude, double longitude) {
-    this.latitude = latitude;
-    this.longitude = longitude;
+    this(0L, 0L, null, latitude, longitude);
+  }
+
+  public PointEntity(long roundId, PointType type, double latitude, double longitude) {
+    this(0L, roundId, type, latitude, longitude);
   }
 
   public PointEntity(long pointId, long roundId, PointType type, double latitude, double longitude) {
     this.pointId = pointId;
-    this.roundId = roundId;
-    this.type = type;
-    this.latitude = latitude;
-    this.longitude = longitude;
-  }
-
-  public PointEntity(long roundId, PointType type, double latitude, double longitude) {
     this.roundId = roundId;
     this.type = type;
     this.latitude = latitude;

@@ -5,13 +5,12 @@ public class RoundDataEntity {
   private long gameId;
   private double distance;
 
-  public RoundDataEntity(long roundId, long gameId, double distance) {
-    this.roundId = roundId;
-    this.gameId = gameId;
-    this.distance = distance;
+  public RoundDataEntity(long gameId, double distance) {
+    this(0L, gameId, distance);
   }
 
-  public RoundDataEntity(long gameId, double distance) {
+  public RoundDataEntity(long roundId, long gameId, double distance) {
+    this.roundId = roundId;
     this.gameId = gameId;
     this.distance = distance;
   }
