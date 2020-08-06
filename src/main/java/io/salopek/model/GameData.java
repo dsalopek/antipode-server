@@ -9,8 +9,7 @@ public class GameData {
   private Timestamp endTime;
 
   public GameData(String playerName) {
-    this.playerName = playerName;
-    this.startTime = Timestamp.from(Instant.now());
+    this(playerName, Timestamp.from(Instant.now()), null);
   }
 
   public GameData(String playerName, Timestamp startTime, Timestamp endTime) {
