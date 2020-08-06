@@ -16,8 +16,12 @@ jobs: # a collection of steps
             - ~/.m2
           key: antipode-{{ checksum "pom.xml" }}
       - run:
+          name: MVN Test
+          command: mvn clean test jacoco:report coveralls:report
+          when: always
+      - run:
           name: MVN Package
-          command: mvn clean package jacoco:report coveralls:report
+          command: mvn package
           when: always
       - run:
           name: Setup Code Climate test-reporter
