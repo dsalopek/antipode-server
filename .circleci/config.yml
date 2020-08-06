@@ -1,6 +1,5 @@
-version: 2 # use CircleCI 2.0
 jobs: # a collection of steps
-  build: # runs not using Workflows must have a `build` job as entry point
+  build-test: # runs not using Workflows must have a `build` job as entry point
     docker:
       - image: circleci/openjdk:8
     working_directory: ~/antipode
@@ -16,9 +15,17 @@ jobs: # a collection of steps
             - ~/.m2
           key: antipode-{{ checksum "pom.xml" }}
       - run:
-          name: MVN Package
+          name: MVN Test
           command: mvn clean package jacoco:report coveralls:report
-          when: always
+      - run:
+          name: MVN Package
+          command: mvn clean install -DskipTests
+  report:
+    docker:
+      - image: circleci/openjdk
+    working_directory: ~/antipode
+    steps:
+      - checkout
       - run:
           name: Setup Code Climate test-reporter
           command: |
@@ -37,3 +44,11 @@ jobs: # a collection of steps
           path: target/surefire-reports
       - store_artifacts:
           path: target/antipode-1.0-SNAPSHOT.jar
+workflows:
+  version: 2.1 # use CircleCI 2.1
+  build-test-report:
+    jobs:
+      - build-test
+      - report:
+          requires:
+            - build-test
