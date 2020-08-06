@@ -95,14 +95,15 @@ public class GameProcessor {
 
     double totalDistance = 0;
     List<CompletedRoundData> completedRoundData = new ArrayList<>();
+    Map<PointType, Point> pointMap;
     for (RoundDataEntity round : roundDataEntities) {
 
-      Point origin = MAPPER.toPoint(pointEntities.stream().filter(p -> p.getRoundId() == round.getRoundId())
-        .filter(p -> p.getType() == PointType.ORIGIN).collect(Collectors.toList()).get(0));
-      Point antipode = MAPPER.toPoint(pointEntities.stream().filter(p -> p.getRoundId() == round.getRoundId())
-        .filter(p -> p.getType() == PointType.ANTIPODE).collect(Collectors.toList()).get(0));
-      Point submission = MAPPER.toPoint(pointEntities.stream().filter(p -> p.getRoundId() == round.getRoundId())
-        .filter(p -> p.getType() == PointType.SUBMISSION).collect(Collectors.toList()).get(0));
+      pointMap = pointEntities.stream().filter(p -> p.getRoundId() == round.getRoundId())
+        .collect(Collectors.toMap(PointEntity::getType,
+          MAPPER::toPoint));
+      Point origin = pointMap.get(PointType.ORIGIN);
+      Point antipode = pointMap.get(PointType.ANTIPODE);
+      Point submission = pointMap.get(PointType.SUBMISSION);
 
       double distance = round.getDistance();
       totalDistance += distance;
