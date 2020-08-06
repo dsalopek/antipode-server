@@ -7,6 +7,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.rmi.UnexpectedException;
+
 @Aspect
 public class LoggingAspect {
   private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspect.class);
@@ -23,7 +25,14 @@ public class LoggingAspect {
     LogBuilder lb = LogBuilder.get().log(LogUtils.methodEntry(method));
     LOGGER.info(lb.build());
 
-    Object result = joinPoint.proceed();
+    Object result = null;
+
+    try {
+      result = joinPoint.proceed();
+
+    } catch (Throwable e) {
+      throw new UnexpectedException("Error proceeding at joinPoint" + e.getMessage());
+    }
     long duration = System.currentTimeMillis() - start;
 
     lb.log(LogUtils.methodExit(method, duration));
