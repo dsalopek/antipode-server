@@ -1,5 +1,6 @@
-jobs: # a collection of steps
-  build-test: # runs not using Workflows must have a `build` job as entry point
+version: 2.1
+jobs:
+  build-test:
     docker:
       - image: circleci/openjdk:8
     working_directory: ~/antipode
@@ -16,7 +17,7 @@ jobs: # a collection of steps
           key: antipode-{{ checksum "pom.xml" }}
       - run:
           name: MVN Test
-          command: mvn clean package jacoco:report coveralls:report
+          command: mvn clean test jacoco:report
       - run:
           name: MVN Package
           command: mvn clean install -DskipTests
@@ -45,7 +46,7 @@ jobs: # a collection of steps
       - store_artifacts:
           path: target/antipode-1.0-SNAPSHOT.jar
 workflows:
-  version: 2 # use CircleCI 2.1
+  version: 2
   build-test-report:
     jobs:
       - build-test
