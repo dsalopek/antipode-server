@@ -172,6 +172,12 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.2</version>
+                <configuration>
+                    <excludes>
+                        <exclude>io/salopek/entity/**/*</exclude>
+                        <exclude>io/salopek/model/**/*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
