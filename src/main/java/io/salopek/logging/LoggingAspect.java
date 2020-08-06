@@ -29,8 +29,7 @@ public class LoggingAspect {
 
     try {
       result = joinPoint.proceed();
-
-    } catch (Throwable e) {
+    } catch (Exception e) {
       throw new UnexpectedException("Error proceeding at joinPoint" + e.getMessage());
     }
     long duration = System.currentTimeMillis() - start;
