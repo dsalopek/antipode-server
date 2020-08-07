@@ -1,4 +1,4 @@
-package io.salopek.http;
+package io.salopek.filter;
 
 import org.apache.commons.io.IOUtils;
 

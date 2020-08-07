@@ -5,13 +5,13 @@ import io.salopek.db.DatabaseService;
 import io.salopek.entity.GameDataEntity;
 import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
-import io.salopek.model.response.CompletedRoundData;
-import io.salopek.model.request.FinishGameRequest;
-import io.salopek.model.response.GameResultsResponse;
-import io.salopek.model.request.NewGameRequest;
 import io.salopek.model.Point;
-import io.salopek.model.response.RoundResponse;
+import io.salopek.model.request.FinishGameRequest;
+import io.salopek.model.request.NewGameRequest;
 import io.salopek.model.request.RoundSubmissionRequest;
+import io.salopek.model.response.CompletedRoundData;
+import io.salopek.model.response.GameResultsResponse;
+import io.salopek.model.response.RoundResponse;
 import io.salopek.util.DistanceCalculator;
 import org.junit.jupiter.api.Test;
 
@@ -32,10 +32,10 @@ import static org.mockito.Mockito.when;
 
 class GameProcessorTest {
 
-  private DistanceCalculator distanceCalculator = mock(DistanceCalculator.class);
-  private DatabaseService databaseService = mock(DatabaseService.class);
+  private final DistanceCalculator distanceCalculator = mock(DistanceCalculator.class);
+  private final DatabaseService databaseService = mock(DatabaseService.class);
 
-  private GameProcessor gameProcessor = new GameProcessor(distanceCalculator, databaseService);
+  private final GameProcessor gameProcessor = new GameProcessor(distanceCalculator, databaseService);
 
   @Test
   void newGame() {
@@ -79,7 +79,8 @@ class GameProcessorTest {
     when(databaseService.getGameId(anyString())).thenReturn(1L);
     when(databaseService.saveNewPoint(any())).thenReturn(1L);
     RoundResponse newGameResponse = gameProcessor.newGame(newGameRequest);
-    RoundSubmissionRequest roundSubmission = new RoundSubmissionRequest(newGameResponse.getGameUUID(), origin, antipode);
+    RoundSubmissionRequest roundSubmission = new RoundSubmissionRequest(newGameResponse.getGameUUID(), origin,
+      antipode);
     assertDoesNotThrow(() -> gameProcessor.submitRound(roundSubmission));
   }
 
@@ -120,7 +121,7 @@ class GameProcessorTest {
     assertThat(actualResponse.getTotalDistance()).isEqualTo(expectedTotalDistance);
     assertThat(actualResponse.getCompletedRoundData().size()).isEqualTo(3);
 
-    for(CompletedRoundData roundData : actualResponse.getCompletedRoundData()) {
+    for (CompletedRoundData roundData : actualResponse.getCompletedRoundData()) {
       assertThat(roundData.getOrigin()).isNotNull();
       assertThat(roundData.getAntipode()).isNotNull();
       assertThat(roundData.getSubmission()).isNotNull();
