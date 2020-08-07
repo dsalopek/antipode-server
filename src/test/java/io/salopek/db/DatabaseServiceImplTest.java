@@ -1,5 +1,10 @@
 package io.salopek.db;
 
+import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.jdbi3.JdbiFactory;
+import io.dropwizard.setup.Environment;
+import io.dropwizard.util.Resources;
+import io.salopek.constant.PointType;
 import io.salopek.dao.GameDataDAO;
 import io.salopek.dao.GameIdDAO;
 import io.salopek.dao.PointDataDAO;
@@ -7,90 +12,151 @@ import io.salopek.dao.RoundDataDAO;
 import io.salopek.entity.GameDataEntity;
 import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
+import io.salopek.mapper.rowmapper.GameDataMapper;
+import io.salopek.mapper.rowmapper.GameIdMapper;
+import io.salopek.mapper.rowmapper.PointDataMapper;
+import io.salopek.mapper.rowmapper.RoundDataMapper;
+import org.eclipse.jetty.util.component.LifeCycle;
+import org.jdbi.v3.core.Jdbi;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class DatabaseServiceImplTest {
 
-  private GameDataDAO gameDataDAO = mock(GameDataDAO.class);
-  private RoundDataDAO roundDataDAO = mock(RoundDataDAO.class);
-  private PointDataDAO pointDataDAO = mock(PointDataDAO.class);
-  private GameIdDAO gameIdDAO = mock(GameIdDAO.class);
+  private DatabaseService databaseService;
+  private Environment environment;
+  private Jdbi jdbi;
+  private GameDataDAO gameDataDAO;
+  private RoundDataDAO roundDataDAO;
+  private PointDataDAO pointDataDAO;
+  private GameIdDAO gameIdDAO;
 
-  private DatabaseService databaseService = new DatabaseServiceImpl(gameDataDAO, roundDataDAO, pointDataDAO, gameIdDAO);
+  @BeforeEach
+  void setUp() throws Exception {
+    environment = new Environment("test");
+
+    DataSourceFactory dataSourceFactory = new DataSourceFactory();
+    dataSourceFactory.setUrl("jdbc:h2:mem:jdbi3-test");
+    dataSourceFactory.setUser("sa");
+    dataSourceFactory.setDriverClass("org.h2.Driver");
+    dataSourceFactory.asSingleConnectionPool();
+
+    jdbi = new JdbiFactory().build(environment, dataSourceFactory, "h2");
+    jdbi.useTransaction(h -> {
+      h.createScript(Resources.toString(Resources.getResource("schema.sql"), StandardCharsets.UTF_8)).execute();
+      h.createScript(Resources.toString(Resources.getResource("data.sql"), StandardCharsets.UTF_8)).execute();
+    });
+
+    gameDataDAO = jdbi.onDemand(GameDataDAO.class);
+    roundDataDAO = jdbi.onDemand(RoundDataDAO.class);
+    pointDataDAO = jdbi.onDemand(PointDataDAO.class);
+    gameIdDAO = jdbi.onDemand(GameIdDAO.class);
+
+    for (LifeCycle lc : environment.lifecycle().getManagedObjects()) {
+      lc.start();
+    }
+    databaseService = new DatabaseServiceImpl(gameDataDAO, roundDataDAO, pointDataDAO, gameIdDAO);
+  }
+
+  @AfterEach
+  void tearDown() throws Exception {
+    for (LifeCycle lc : environment.lifecycle().getManagedObjects()) {
+      lc.stop();
+    }
+  }
 
   @Test
   void saveNewGame() {
-    GameDataEntity gameDataEntity = new GameDataEntity();
-    when(gameDataDAO.insertGameData(any())).thenReturn(1L);
-    assertDoesNotThrow(() -> databaseService.saveNewGame(gameDataEntity));
+    GameDataEntity expectedData = new GameDataEntity("Gary", Timestamp.from(Instant.now()), null);
+    long gameId = databaseService.saveNewGame(expectedData);
+    expectedData.setGameId(gameId);
+    GameDataEntity actualData = databaseService.getGameDataByGameId(gameId);
+    assertThat(actualData).usingRecursiveComparison().isEqualTo(expectedData);
   }
 
   @Test
   void saveNewRound() {
-    RoundDataEntity roundDataEntity = new RoundDataEntity(1L, 500);
-    when(roundDataDAO.insertRoundData(any())).thenReturn(2L);
-    assertDoesNotThrow(() -> databaseService.saveNewRound(roundDataEntity));
+    long gameId = 5L;
+    RoundDataEntity expectedData = new RoundDataEntity(gameId, 500);
+    long roundId = databaseService.saveNewRound(expectedData);
+    expectedData.setRoundId(roundId);
+    RoundDataEntity actualData = databaseService.getRoundDataByGameId(gameId).get(0);
+    assertThat(actualData).usingRecursiveComparison().isEqualTo(expectedData);
   }
 
   @Test
   void saveNewPoint() {
-    PointEntity pointEntity = new PointEntity();
-    when(pointDataDAO.insertPointData(any())).thenReturn(1L);
-    assertDoesNotThrow(() -> databaseService.saveNewPoint(pointEntity));
+    long roundId = 100L;
+    PointType type = PointType.ORIGIN;
+    PointEntity expectedData = new PointEntity(roundId, type, 45, 49);
+    long pointId = databaseService.saveNewPoint(expectedData);
+    expectedData.setPointId(pointId);
+    PointEntity actualData = databaseService.getPointDataByRoundIds(Collections.singletonList(roundId)).get(0);
+    assertThat(actualData).usingRecursiveComparison().isEqualTo(expectedData);
   }
 
   @Test
   void saveNewGameId() {
-    long gameId = 1;
-    String gameUUID = "asdfg1234";
-    assertDoesNotThrow(() -> databaseService.saveNewGameId(gameId, gameUUID));
+    long gameId = 4L;
+    String gameUUID = "8372-dhska";
+    databaseService.saveNewGameId(gameId, gameUUID);
+    assertThat(databaseService.getGameId(gameUUID)).isEqualTo(gameId);
   }
 
   @Test
   void getGameId() {
-    String gameUUID = "asdfg1234";
-    when(gameIdDAO.getGameId(any())).thenReturn(1L);
-    assertDoesNotThrow(() -> databaseService.getGameId(gameUUID));
+    String gameUUID = "abcd-1234";
+    assertThat(databaseService.getGameId(gameUUID)).isEqualTo(1L);
   }
 
   @Test
   void saveGameData() {
-    GameDataEntity gameDataEntity = new GameDataEntity();
-    assertDoesNotThrow(() -> databaseService.saveGameData(gameDataEntity));
+    long gameId = 1L;
+    Timestamp now = Timestamp.from(Instant.now());
+    GameDataEntity expectedData = new GameDataEntity(gameId, "Dylan1", now, now);
+    databaseService.saveGameData(expectedData);
+    assertThat(databaseService.getGameDataByGameId(gameId)).usingRecursiveComparison().isEqualTo(expectedData);
   }
 
   @Test
   void getGameDataByGameId() {
     long gameId = 1L;
-    GameDataEntity gameDataEntity = new GameDataEntity();
-    when(gameDataDAO.getGameDataByGameId(anyLong())).thenReturn(gameDataEntity);
-    assertDoesNotThrow(() -> databaseService.getGameDataByGameId(gameId));
+    Timestamp ts = Timestamp.valueOf("2020-08-07 15:51:38.053");
+    GameDataEntity expectedData = new GameDataEntity(gameId, "Dylan", ts, ts);
+    assertThat(databaseService.getGameDataByGameId(gameId)).usingRecursiveComparison().isEqualTo(expectedData);
   }
 
   @Test
   void getRoundDataByGameId() {
     long gameId = 1L;
-    List<RoundDataEntity> rounds = Arrays.asList(new RoundDataEntity(gameId, 1000d));
-    when(roundDataDAO.getRoundDataByGameId(anyLong())).thenReturn(rounds);
-    assertDoesNotThrow(() -> databaseService.getRoundDataByGameId(gameId));
+    List<RoundDataEntity> expectedData = Collections.singletonList(new RoundDataEntity(1L, 1L, 23479.00));
+    assertThat(databaseService.getRoundDataByGameId(gameId)).usingRecursiveComparison().isEqualTo(expectedData);
   }
 
   @Test
   void getPointDataByRoundIds() {
-    List<Long> roundIds = Arrays.asList(1L, 2L, 3L);
-    List<PointEntity> points = Arrays.asList(new PointEntity(), new PointEntity(), new PointEntity());
-    when(pointDataDAO.getPointsByRoundIds(anyList())).thenReturn(points);
-    assertDoesNotThrow(() -> databaseService.getPointDataByRoundIds(roundIds));
+    List<Long> roundIds = Arrays.asList(1L);
+    List<PointEntity> expectedData = Arrays
+      .asList(
+        new PointEntity(1, 1, PointType.ORIGIN, 45, 150),
+        new PointEntity(2, 1, PointType.ANTIPODE, -45, -30),
+        new PointEntity(3, 1, PointType.SUBMISSION, -46, -33));
+    assertThat(databaseService.getPointDataByRoundIds(roundIds)).usingRecursiveComparison().isEqualTo(expectedData);
   }
 }
