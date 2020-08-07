@@ -12,10 +12,6 @@ import io.salopek.dao.RoundDataDAO;
 import io.salopek.entity.GameDataEntity;
 import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
-import io.salopek.mapper.rowmapper.GameDataMapper;
-import io.salopek.mapper.rowmapper.GameIdMapper;
-import io.salopek.mapper.rowmapper.PointDataMapper;
-import io.salopek.mapper.rowmapper.RoundDataMapper;
 import org.eclipse.jetty.util.component.LifeCycle;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.AfterEach;
@@ -30,12 +26,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class DatabaseServiceImplTest {
 

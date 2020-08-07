@@ -26,7 +26,7 @@ public class LogUtils {
   }
 
   public static String logObject(String key, Object value) {
-    if(null == key || key.isEmpty()) {
+    if (null == key || key.isEmpty()) {
       return "";
     } else {
       return append(key, DELIMITER, (null == value ? "null" : replaceNewLine(value.toString())));

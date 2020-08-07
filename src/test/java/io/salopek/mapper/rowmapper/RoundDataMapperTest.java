@@ -1,6 +1,5 @@
 package io.salopek.mapper.rowmapper;
 
-import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
 import io.salopek.util.MockResultSet;
 import org.jdbi.v3.core.statement.StatementContext;

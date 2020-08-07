@@ -1,4 +1,4 @@
-package io.salopek.http;
+package io.salopek.filter;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;

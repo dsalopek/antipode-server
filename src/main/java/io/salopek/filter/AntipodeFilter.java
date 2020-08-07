@@ -1,7 +1,5 @@
 package io.salopek.filter;
 
-import io.salopek.http.MultiReadHttpServletRequestWrapper;
-import io.salopek.http.MultiReadHttpServletResponseWrapper;
 import io.salopek.logging.LogBuilder;
 import io.salopek.logging.LogUtils;
 import org.slf4j.Logger;
