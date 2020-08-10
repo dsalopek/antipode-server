@@ -6,7 +6,7 @@ import io.salopek.model.request.NewGameRequest;
 import io.salopek.model.request.RoundSubmissionRequest;
 import io.salopek.model.response.GameResultsResponse;
 import io.salopek.model.response.RoundResponse;
-import io.salopek.processor.GameProcessor;
+import io.salopek.processor.GameProcessorImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -26,10 +26,10 @@ import static io.salopek.constant.AntipodeConstants.SUBMIT_ROUND;
 @Api(value = GAME_ENDPOINT, produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
 @Path(GAME_ENDPOINT)
 public class GameResource {
-  private final GameProcessor gameProcessor;
+  private final GameProcessorImpl gameProcessor;
 
   @Inject
-  public GameResource(GameProcessor gameProcessor) {
+  public GameResource(GameProcessorImpl gameProcessor) {
     this.gameProcessor = gameProcessor;
   }
 
