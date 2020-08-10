@@ -7,6 +7,7 @@ public class Point {
   private double latitude;
 
   public Point() {
+    this(0, 0);
   }
 
   public Point(double longitude, double latitude) {

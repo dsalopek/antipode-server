@@ -30,12 +30,12 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class GameProcessorTest {
+class GameProcessorImplTest {
 
   private final DistanceCalculator distanceCalculator = mock(DistanceCalculator.class);
   private final DatabaseService databaseService = mock(DatabaseService.class);
 
-  private final GameProcessor gameProcessor = new GameProcessor(distanceCalculator, databaseService);
+  private final GameProcessorImpl gameProcessor = new GameProcessorImpl(distanceCalculator, databaseService);
 
   @Test
   void newGame() {
