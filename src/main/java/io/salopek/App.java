@@ -16,6 +16,7 @@ import io.salopek.dao.RoundDataDAO;
 import io.salopek.db.DatabaseService;
 import io.salopek.db.DatabaseServiceImpl;
 import io.salopek.filter.AntipodeFilter;
+import io.salopek.processor.GameProcessor;
 import io.salopek.processor.GameProcessorImpl;
 import io.salopek.resource.GameResource;
 import io.salopek.util.DistanceCalculator;
@@ -81,7 +82,7 @@ public class App extends Application<AppConfiguration> {
         bind(roundDataDAO).to(RoundDataDAO.class);
         bind(pointDataDAO).to(PointDataDAO.class);
         bind(gameIdDAO).to(GameIdDAO.class);
-        bind(GameProcessorImpl.class).to(GameProcessorImpl.class).in(Singleton.class);
+        bind(GameProcessorImpl.class).to(GameProcessor.class).in(Singleton.class);
         bind(HaversineDistanceCalculator.class).to(DistanceCalculator.class).in(Singleton.class);
         bind(DatabaseServiceImpl.class).to(DatabaseService.class).in(Singleton.class);
       }
