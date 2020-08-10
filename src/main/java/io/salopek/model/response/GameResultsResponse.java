@@ -7,6 +7,8 @@ public class GameResultsResponse {
   private double totalDistance;
   private List<CompletedRoundData> completedRoundData;
 
+  public GameResultsResponse(){}
+
   public GameResultsResponse(String playerName, List<CompletedRoundData> completedRoundData, double totalDistance) {
     this.playerName = playerName;
     this.completedRoundData = completedRoundData;
