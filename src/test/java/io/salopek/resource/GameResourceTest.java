@@ -14,6 +14,7 @@ import io.salopek.model.request.RoundSubmissionRequest;
 import io.salopek.model.response.CompletedRoundData;
 import io.salopek.model.response.GameResultsResponse;
 import io.salopek.model.response.RoundResponse;
+import io.salopek.processor.GameProcessor;
 import io.salopek.processor.GameProcessorImpl;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
 class GameResourceTest {
-  private static final GameProcessorImpl gameProcessor = mock(GameProcessorImpl.class);
+  private static final GameProcessor gameProcessor = mock(GameProcessor.class);
   private static final ResourceExtension ext = ResourceExtension.builder().addResource(new GameResource(gameProcessor))
     .build();
 
