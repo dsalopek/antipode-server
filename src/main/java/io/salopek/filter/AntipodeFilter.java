@@ -27,8 +27,6 @@ public class AntipodeFilter implements Filter {
     throws IOException, ServletException {
     if (request instanceof HttpServletRequest) {
       long start = System.currentTimeMillis();
-//      MDC.clear();
-//      MDC.put("requestId", UUID.randomUUID().toString());
 
       MultiReadHttpServletRequestWrapper wrappedRequest = new MultiReadHttpServletRequestWrapper(
         (HttpServletRequest) request);
