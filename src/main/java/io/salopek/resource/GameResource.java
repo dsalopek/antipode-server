@@ -7,7 +7,6 @@ import io.salopek.model.request.RoundSubmissionRequest;
 import io.salopek.model.response.GameResultsResponse;
 import io.salopek.model.response.RoundResponse;
 import io.salopek.processor.GameProcessor;
-import io.salopek.processor.GameProcessorImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

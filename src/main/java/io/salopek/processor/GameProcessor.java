@@ -8,6 +8,8 @@ import io.salopek.model.response.RoundResponse;
 
 public interface GameProcessor {
   RoundResponse newGame(NewGameRequest newGameRequest);
+
   RoundResponse submitRound(RoundSubmissionRequest roundSubmissionRequest);
+
   GameResultsResponse finishGame(FinishGameRequest finishGameRequest);
 }

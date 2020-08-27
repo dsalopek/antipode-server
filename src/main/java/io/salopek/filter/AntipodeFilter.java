@@ -4,7 +4,6 @@ import io.salopek.logging.LogBuilder;
 import io.salopek.logging.LogUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -49,8 +48,7 @@ public class AntipodeFilter implements Filter {
 
       long duration = System.currentTimeMillis() - start;
 
-      lb.log(LogUtils.methodExit(uri, duration)).kv("response",
-        new String(wrappedResponse.getCopy()));
+      lb.log(LogUtils.methodExit(uri, duration)).kv("response", new String(wrappedResponse.getCopy()));
       LOGGER.info(lb.build());
     }
   }
