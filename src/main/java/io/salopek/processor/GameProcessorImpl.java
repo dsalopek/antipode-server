@@ -12,7 +12,6 @@ import io.salopek.model.GameData;
 import io.salopek.model.Point;
 import io.salopek.model.UserData;
 import io.salopek.model.request.FinishGameRequest;
-import io.salopek.model.request.NewGameRequest;
 import io.salopek.model.request.RoundSubmissionRequest;
 import io.salopek.model.response.CompletedRoundData;
 import io.salopek.model.response.GameResultsResponse;
@@ -47,11 +46,9 @@ public class GameProcessorImpl implements GameProcessor {
   }
 
   @Loggable
-  public RoundResponse newGame(UserData userData, NewGameRequest newGameRequest) {
+  public RoundResponse newGame(UserData userData) {
     String gameUUID = saveNewGame(new GameData(userData));
-
     Point point = PointUtils.getRandomOrigin();
-
     return new RoundResponse(gameUUID, point);
   }
 

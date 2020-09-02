@@ -8,7 +8,6 @@ import io.salopek.entity.RoundDataEntity;
 import io.salopek.entity.UserDataEntity;
 import io.salopek.model.Point;
 import io.salopek.model.request.FinishGameRequest;
-import io.salopek.model.request.NewGameRequest;
 import io.salopek.model.request.RoundSubmissionRequest;
 import io.salopek.model.response.CompletedRoundData;
 import io.salopek.model.response.GameResultsResponse;
@@ -40,10 +39,9 @@ class GameProcessorImplTest {
 
   @Test
   void newGame() {
-    NewGameRequest newGameRequest = new NewGameRequest("Dylan");
 
     when(databaseService.saveNewGame(any())).thenReturn(1L);
-    RoundResponse actualResponse = gameProcessor.newGame(null, newGameRequest);
+    RoundResponse actualResponse = gameProcessor.newGame(null);
 
     assertThat(actualResponse.getGameUUID()).isNotNull();
     assertThat(actualResponse.getOrigin()).isNotNull();
@@ -69,7 +67,6 @@ class GameProcessorImplTest {
 
   @Test
   void utilizeGameIdCache() {
-    NewGameRequest newGameRequest = new NewGameRequest("Dylan");
     when(databaseService.saveNewGame(any())).thenReturn(1L);
 
     Point antipode = antipode();
@@ -79,7 +76,7 @@ class GameProcessorImplTest {
     when(databaseService.saveNewRound(any())).thenReturn(1L);
     when(databaseService.getGameId(anyString())).thenReturn(1L);
     when(databaseService.saveNewPoint(any())).thenReturn(1L);
-    RoundResponse newGameResponse = gameProcessor.newGame(null, newGameRequest);
+    RoundResponse newGameResponse = gameProcessor.newGame(null);
     RoundSubmissionRequest roundSubmission = new RoundSubmissionRequest(newGameResponse.getGameUUID(), origin,
       antipode);
     assertDoesNotThrow(() -> gameProcessor.submitRound(roundSubmission));

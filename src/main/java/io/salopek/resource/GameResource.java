@@ -4,7 +4,6 @@ import io.dropwizard.auth.Auth;
 import io.salopek.logging.Loggable;
 import io.salopek.model.UserData;
 import io.salopek.model.request.FinishGameRequest;
-import io.salopek.model.request.NewGameRequest;
 import io.salopek.model.request.RoundSubmissionRequest;
 import io.salopek.model.response.GameResultsResponse;
 import io.salopek.model.response.RoundResponse;
@@ -42,8 +41,8 @@ public class GameResource {
   @Path(NEW_GAME)
   @Produces(MediaType.APPLICATION_JSON)
   @ApiOperation(value = "Submit a player's name to start a new game", response = RoundResponse.class)
-  public Response newGame(@Auth UserData userData, @ApiParam(required = true) NewGameRequest newGameRequest) {
-    RoundResponse roundResponse = gameProcessor.newGame(userData, newGameRequest);
+  public Response newGame(@Auth UserData userData) {
+    RoundResponse roundResponse = gameProcessor.newGame(userData);
     return Response.ok(roundResponse).build();
   }
 

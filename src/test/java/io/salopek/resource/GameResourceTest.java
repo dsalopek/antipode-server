@@ -10,7 +10,6 @@ import io.salopek.entity.UserDataEntity;
 import io.salopek.model.Point;
 import io.salopek.model.UserData;
 import io.salopek.model.request.FinishGameRequest;
-import io.salopek.model.request.NewGameRequest;
 import io.salopek.model.request.RoundSubmissionRequest;
 import io.salopek.model.response.CompletedRoundData;
 import io.salopek.model.response.GameResultsResponse;
@@ -55,14 +54,13 @@ class GameResourceTest {
 
   @Test
   void newGame() {
-    NewGameRequest newGameRequest = new NewGameRequest("Kary");
     RoundResponse roundResponse = new RoundResponse("asdf-1234", new Point());
 
-    when(gameProcessor.newGame(any(), any())).thenReturn(roundResponse);
+    when(gameProcessor.newGame(any())).thenReturn(roundResponse);
     when(databaseService.getUserByAccessToken(anyString())).thenReturn(new UserDataEntity(1L, "Dylan", "", ""));
 
     Response response = ext.target(GAME_ENDPOINT + NEW_GAME).request().header("Authorization", "Bearer TOKEN1")
-      .post(Entity.json(newGameRequest));
+      .post(null);
 
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK_200);
     RoundResponse actual = response.readEntity(RoundResponse.class);
