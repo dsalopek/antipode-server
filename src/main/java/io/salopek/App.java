@@ -10,8 +10,6 @@ import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import io.federecio.dropwizard.swagger.SwaggerBundle;
-import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 import io.salopek.dao.GameDataDAO;
 import io.salopek.dao.GameIdDAO;
 import io.salopek.dao.PointDataDAO;
@@ -53,13 +51,6 @@ public class App extends Application<AppConfiguration> {
     bootstrap.setConfigurationSourceProvider(new SubstitutingSourceProvider(
       bootstrap.getConfigurationSourceProvider(),
       new EnvironmentVariableSubstitutor(false)));
-
-    bootstrap.addBundle(new SwaggerBundle<AppConfiguration>() {
-      @Override
-      protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(AppConfiguration configuration) {
-        return configuration.swaggerBundleConfiguration;
-      }
-    });
   }
 
   @Override

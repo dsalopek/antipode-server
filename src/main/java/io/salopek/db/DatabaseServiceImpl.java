@@ -103,16 +103,19 @@ public class DatabaseServiceImpl implements DatabaseService {
     return userDataDAO.saveUserData(userData);
   }
 
+  @Loggable
   @Override
   public boolean updateAccessTokenByUserId(String accessToken, long userId) {
     return userDataDAO.updateAccessTokenByUserId(accessToken, userId);
   }
 
+  @Loggable
   @Override
   public UserDataEntity getUserByAccessToken(String accessToken) {
     return userDataDAO.getUserByAccessToken(accessToken);
   }
 
+  @Loggable
   @Override
   public UserDataEntity getUserByUserId(long userId) {
     return userDataDAO.getUserByUserId(userId);

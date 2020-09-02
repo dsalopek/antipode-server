@@ -1,5 +1,6 @@
 package io.salopek.resource;
 
+import io.salopek.logging.Loggable;
 import io.salopek.model.request.LoginRequest;
 import io.salopek.model.request.RegisterRequest;
 import io.salopek.model.response.AccessTokenResponse;
@@ -12,7 +13,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/auth")
+import static io.salopek.constant.AntipodeConstants.AUTH_ENDPOINT;
+import static io.salopek.constant.AntipodeConstants.LOGIN;
+import static io.salopek.constant.AntipodeConstants.REGISTER;
+
+@Path(AUTH_ENDPOINT)
+@Produces(MediaType.APPLICATION_JSON)
 public class AuthenticationResource {
 
   private final AuthenticationProcessor authenticationProcessor;
@@ -22,17 +28,17 @@ public class AuthenticationResource {
     this.authenticationProcessor = authenticationProcessor;
   }
 
+  @Loggable
   @POST
-  @Path("/register")
-  @Produces(MediaType.APPLICATION_JSON)
+  @Path(REGISTER)
   public Response register(RegisterRequest registerRequest) {
     AccessTokenResponse accessToken = authenticationProcessor.register(registerRequest);
     return Response.ok(accessToken).build();
   }
 
+  @Loggable
   @POST
-  @Path("/login")
-  @Produces(MediaType.APPLICATION_JSON)
+  @Path(LOGIN)
   public Response login(LoginRequest loginRequest) {
     AccessTokenResponse accessToken = authenticationProcessor.login(loginRequest);
     return Response.ok(accessToken).build();

@@ -3,6 +3,7 @@ package io.salopek.processor;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import io.salopek.db.DatabaseService;
 import io.salopek.entity.UserDataEntity;
+import io.salopek.logging.Loggable;
 import io.salopek.model.request.LoginRequest;
 import io.salopek.model.request.RegisterRequest;
 import io.salopek.model.response.AccessTokenResponse;
@@ -11,6 +12,10 @@ import io.salopek.util.HashUtils;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
+
+import static io.salopek.constant.AntipodeConstants.EXC_INVALID_PASSWORD;
+import static io.salopek.constant.AntipodeConstants.EXC_USER_EXISTS;
+import static io.salopek.constant.AntipodeConstants.EXC_USER_NOT_FOUND;
 
 public class AuthenticationProcessorImpl implements AuthenticationProcessor {
 
@@ -21,19 +26,17 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
     this.databaseService = databaseService;
   }
 
+  @Loggable
   @Override
   public AccessTokenResponse register(RegisterRequest registerRequest) {
 
     UserDataEntity userData = databaseService.isUsernameAvailable(registerRequest.getUserName());
-
     if (userData != null) {
-      throw new BadRequestException("User already exists");
+      throw new BadRequestException(EXC_USER_EXISTS);
     }
     userData = new UserDataEntity(registerRequest.getUserName());
-
     String hashedPassword = HashUtils.hashString(registerRequest.getPassword());
     userData.setPassword(hashedPassword);
-
     String accessToken = HashUtils.randomHashByString(userData.getUserName());
     userData.setAccessToken(accessToken);
 
@@ -41,24 +44,20 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
     return new AccessTokenResponse(accessToken);
   }
 
+  @Loggable
   @Override
   public AccessTokenResponse login(LoginRequest loginRequest) {
 
     UserDataEntity userData = databaseService.getUserByUsername(loginRequest.getUserName());
-
     if (userData == null) {
-      throw new NotFoundException("User not found");
+      throw new NotFoundException(EXC_USER_NOT_FOUND);
     }
-
     BCrypt.Result result = BCrypt.verifyer().verify(loginRequest.getPassword().toCharArray(), userData.getPassword());
-
     if (!result.verified) {
-      throw new BadRequestException("Invalid password");
+      throw new BadRequestException(EXC_INVALID_PASSWORD);
     }
-
     String accessToken = HashUtils.randomHashByString(userData.getUserName());
     databaseService.updateAccessTokenByUserId(accessToken, userData.getUserId());
-
     return new AccessTokenResponse(accessToken);
   }
 }
