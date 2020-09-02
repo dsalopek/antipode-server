@@ -17,5 +17,4 @@ public class HashUtils {
     String currentTime = Instant.now().toString() + s;
     return BCrypt.withDefaults().hashToString(12, currentTime.toCharArray());
   }
-
 }
