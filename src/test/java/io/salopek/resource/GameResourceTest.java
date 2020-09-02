@@ -1,13 +1,14 @@
 package io.salopek.resource;
 
-//import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
-//import io.dropwizard.testing.junit5.ResourceExtension;
-//import io.salopek.processor.GameProcessor;
-//import org.junit.jupiter.api.extension.ExtendWith;
-
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthValueFactoryProvider;
+import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
+import io.salopek.db.DatabaseService;
+import io.salopek.entity.UserDataEntity;
 import io.salopek.model.Point;
+import io.salopek.model.UserData;
 import io.salopek.model.request.FinishGameRequest;
 import io.salopek.model.request.NewGameRequest;
 import io.salopek.model.request.RoundSubmissionRequest;
@@ -15,14 +16,15 @@ import io.salopek.model.response.CompletedRoundData;
 import io.salopek.model.response.GameResultsResponse;
 import io.salopek.model.response.RoundResponse;
 import io.salopek.processor.GameProcessor;
-import io.salopek.processor.GameProcessorImpl;
+import io.salopek.security.CoreAuthenticator;
+import io.salopek.security.CoreAuthorizer;
 import org.eclipse.jetty.http.HttpStatus;
+import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -32,13 +34,23 @@ import static io.salopek.constant.AntipodeConstants.NEW_GAME;
 import static io.salopek.constant.AntipodeConstants.SUBMIT_ROUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(DropwizardExtensionsSupport.class)
 class GameResourceTest {
   private static final GameProcessor gameProcessor = mock(GameProcessor.class);
-  private static final ResourceExtension ext = ResourceExtension.builder().addResource(new GameResource(gameProcessor))
+  private static final DatabaseService databaseService = mock(DatabaseService.class);
+  private static final ResourceExtension ext = ResourceExtension.builder()
+    .setTestContainerFactory(new GrizzlyWebTestContainerFactory())
+    .addProvider(new AuthDynamicFeature(new OAuthCredentialAuthFilter.Builder<UserData>()
+      .setAuthenticator(new CoreAuthenticator(databaseService))
+      .setAuthorizer(new CoreAuthorizer())
+      .setPrefix("Bearer")
+      .buildAuthFilter()))
+    .addProvider(new AuthValueFactoryProvider.Binder<>(UserData.class))
+    .addResource(new GameResource(gameProcessor))
     .build();
 
   @Test
@@ -46,9 +58,11 @@ class GameResourceTest {
     NewGameRequest newGameRequest = new NewGameRequest("Kary");
     RoundResponse roundResponse = new RoundResponse("asdf-1234", new Point());
 
-    when(gameProcessor.newGame(any())).thenReturn(roundResponse);
+    when(gameProcessor.newGame(any(), any())).thenReturn(roundResponse);
+    when(databaseService.getUserByAccessToken(anyString())).thenReturn(new UserDataEntity(1L, "Dylan", "", ""));
 
-    Response response = ext.target(GAME_ENDPOINT + NEW_GAME).request().post(Entity.json(newGameRequest));
+    Response response = ext.target(GAME_ENDPOINT + NEW_GAME).request().header("Authorization", "Bearer TOKEN1")
+      .post(Entity.json(newGameRequest));
 
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK_200);
     RoundResponse actual = response.readEntity(RoundResponse.class);
@@ -64,7 +78,9 @@ class GameResourceTest {
 
     when(gameProcessor.submitRound(any())).thenReturn(roundResponse);
 
-    Response response = ext.target(GAME_ENDPOINT + SUBMIT_ROUND).request().post(Entity.json(roundSubmissionRequest));
+    when(databaseService.getUserByAccessToken(anyString())).thenReturn(new UserDataEntity(1L, "Dylan", "", ""));
+    Response response = ext.target(GAME_ENDPOINT + SUBMIT_ROUND).request().header("Authorization", "Bearer TOKEN1")
+      .post(Entity.json(roundSubmissionRequest));
 
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK_200);
     RoundResponse actual = response.readEntity(RoundResponse.class);
@@ -77,8 +93,10 @@ class GameResourceTest {
     GameResultsResponse gameResultsResponse = new GameResultsResponse("player_name", completedRoundData(), 0);
 
     when(gameProcessor.finishGame(any())).thenReturn(gameResultsResponse);
+    when(databaseService.getUserByAccessToken(anyString())).thenReturn(new UserDataEntity(1L, "Dylan", "", ""));
 
-    Response response = ext.target(GAME_ENDPOINT + FINISH_GAME).request().post(Entity.json(finishGameRequest));
+    Response response = ext.target(GAME_ENDPOINT + FINISH_GAME).request().header("Authorization", "Bearer TOKEN1")
+      .post(Entity.json(finishGameRequest));
 
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK_200);
     GameResultsResponse actual = response.readEntity(GameResultsResponse.class);

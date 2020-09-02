@@ -11,7 +11,7 @@ public class GameDataMapper implements RowMapper<GameDataEntity> {
 
   @Override
   public GameDataEntity map(ResultSet rs, StatementContext ctx) throws SQLException {
-    return new GameDataEntity(rs.getLong("game_id"), rs.getString("player_name"), rs.getTimestamp("start_ts"),
+    return new GameDataEntity(rs.getLong("game_id"), rs.getLong("user_id"), rs.getTimestamp("start_ts"),
       rs.getTimestamp("end_ts"));
   }
 }

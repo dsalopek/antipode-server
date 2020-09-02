@@ -4,26 +4,26 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 public class GameData {
-  private String playerName;
+  private UserData userData;
   private Timestamp startTime;
   private Timestamp endTime;
 
-  public GameData(String playerName) {
-    this(playerName, Timestamp.from(Instant.now()), null);
+  public GameData(UserData userData) {
+    this(userData, Timestamp.from(Instant.now()), null);
   }
 
-  public GameData(String playerName, Timestamp startTime, Timestamp endTime) {
-    this.playerName = playerName;
+  public GameData(UserData userData, Timestamp startTime, Timestamp endTime) {
+    this.userData = userData;
     this.startTime = startTime;
     this.endTime = endTime;
   }
 
-  public String getPlayerName() {
-    return playerName;
+  public UserData getUserData() {
+    return userData;
   }
 
-  public void setPlayerName(String playerName) {
-    this.playerName = playerName;
+  public void setUserData(UserData userData) {
+    this.userData = userData;
   }
 
   public Timestamp getStartTime() {
@@ -45,7 +45,7 @@ public class GameData {
   @Override
   public String toString() {
     return "GameData{" +
-      ", playerName='" + playerName + '\'' +
+      ", userData='" + userData + '\'' +
       ", startTime=" + startTime +
       ", endTime=" + endTime +
       '}';

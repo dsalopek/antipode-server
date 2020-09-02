@@ -12,14 +12,14 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 @RegisterRowMapper(GameDataMapper.class)
 public interface GameDataDAO {
 
-  @SqlUpdate("insert into game_data (game_id, player_name, start_ts) values (:getGameId, :getPlayerName, :getStartTime)")
+  @SqlUpdate("insert into game_data (game_id, user_id, start_ts) values (:getGameId, :getUserId, :getStartTime)")
   @GetGeneratedKeys
   long insertGameData(@BindMethods GameDataEntity gameDataEntity);
 
   @SqlQuery("select * from game_data where game_id = :gameId")
   GameDataEntity getGameDataByGameId(@Bind("gameId") long gameId);
 
-  @SqlUpdate("update game_data set game_id = :getGameId, player_name = :getPlayerName, start_ts = :getStartTime, end_ts = :getEndTime where game_id = :getGameId")
+  @SqlUpdate("update game_data set game_id = :getGameId, user_id = :getUserId, start_ts = :getStartTime, end_ts = :getEndTime where game_id = :getGameId")
   void saveGameData(@BindMethods GameDataEntity gameDataEntity);
 
 }

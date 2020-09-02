@@ -9,6 +9,7 @@ import io.salopek.dao.GameDataDAO;
 import io.salopek.dao.GameIdDAO;
 import io.salopek.dao.PointDataDAO;
 import io.salopek.dao.RoundDataDAO;
+import io.salopek.dao.UserDataDAO;
 import io.salopek.entity.GameDataEntity;
 import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
@@ -36,6 +37,7 @@ class DatabaseServiceImplTest {
   private RoundDataDAO roundDataDAO;
   private PointDataDAO pointDataDAO;
   private GameIdDAO gameIdDAO;
+  private UserDataDAO userDataDAO;
 
   @BeforeEach
   void setUp() throws Exception {
@@ -57,11 +59,12 @@ class DatabaseServiceImplTest {
     roundDataDAO = jdbi.onDemand(RoundDataDAO.class);
     pointDataDAO = jdbi.onDemand(PointDataDAO.class);
     gameIdDAO = jdbi.onDemand(GameIdDAO.class);
+    userDataDAO = jdbi.onDemand(UserDataDAO.class);
 
     for (LifeCycle lc : environment.lifecycle().getManagedObjects()) {
       lc.start();
     }
-    databaseService = new DatabaseServiceImpl(gameDataDAO, roundDataDAO, pointDataDAO, gameIdDAO);
+    databaseService = new DatabaseServiceImpl(gameDataDAO, roundDataDAO, pointDataDAO, gameIdDAO, userDataDAO);
   }
 
   @AfterEach
@@ -73,7 +76,7 @@ class DatabaseServiceImplTest {
 
   @Test
   void saveNewGame() {
-    GameDataEntity expectedData = new GameDataEntity("Gary", Timestamp.from(Instant.now()), null);
+    GameDataEntity expectedData = new GameDataEntity(1L, Timestamp.from(Instant.now()), null);
     long gameId = databaseService.saveNewGame(expectedData);
     expectedData.setGameId(gameId);
     GameDataEntity actualData = databaseService.getGameDataByGameId(gameId);
@@ -119,7 +122,7 @@ class DatabaseServiceImplTest {
   void saveGameData() {
     long gameId = 1L;
     Timestamp now = Timestamp.from(Instant.now());
-    GameDataEntity expectedData = new GameDataEntity(gameId, "Dylan1", now, now);
+    GameDataEntity expectedData = new GameDataEntity(gameId, 1L, now, now);
     databaseService.saveGameData(expectedData);
     assertThat(databaseService.getGameDataByGameId(gameId)).usingRecursiveComparison().isEqualTo(expectedData);
   }
@@ -128,7 +131,7 @@ class DatabaseServiceImplTest {
   void getGameDataByGameId() {
     long gameId = 1L;
     Timestamp ts = Timestamp.valueOf("2020-08-07 15:51:38.053");
-    GameDataEntity expectedData = new GameDataEntity(gameId, "Dylan", ts, ts);
+    GameDataEntity expectedData = new GameDataEntity(gameId, 1L, ts, ts);
     assertThat(databaseService.getGameDataByGameId(gameId)).usingRecursiveComparison().isEqualTo(expectedData);
   }
 

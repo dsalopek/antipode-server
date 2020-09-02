@@ -5,10 +5,12 @@ import io.salopek.db.DatabaseService;
 import io.salopek.entity.GameDataEntity;
 import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
+import io.salopek.entity.UserDataEntity;
 import io.salopek.logging.Loggable;
 import io.salopek.mapper.ModelMapper;
 import io.salopek.model.GameData;
 import io.salopek.model.Point;
+import io.salopek.model.UserData;
 import io.salopek.model.request.FinishGameRequest;
 import io.salopek.model.request.NewGameRequest;
 import io.salopek.model.request.RoundSubmissionRequest;
@@ -45,8 +47,8 @@ public class GameProcessorImpl implements GameProcessor {
   }
 
   @Loggable
-  public RoundResponse newGame(NewGameRequest newGameRequest) {
-    String gameUUID = saveNewGame(new GameData(newGameRequest.getPlayerName()));
+  public RoundResponse newGame(UserData userData, NewGameRequest newGameRequest) {
+    String gameUUID = saveNewGame(new GameData(userData));
 
     Point point = PointUtils.getRandomOrigin();
 
@@ -93,8 +95,9 @@ public class GameProcessorImpl implements GameProcessor {
   @Loggable
   private GameResultsResponse buildGameResultResponse(long gameId) {
     GameDataEntity gameDataEntity = updateGameData(gameId);
-    String playerName = gameDataEntity.getPlayerName();
+    long userId = gameDataEntity.getUserId();
 
+    UserDataEntity userDataEntity = databaseService.getUserByUserId(userId);
     List<RoundDataEntity> roundDataEntities = databaseService.getRoundDataByGameId(gameId);
     List<Long> roundIds = roundDataEntities.stream().map(RoundDataEntity::getRoundId).collect(Collectors.toList());
     List<PointEntity> pointEntities = databaseService.getPointDataByRoundIds(roundIds);
@@ -117,7 +120,7 @@ public class GameProcessorImpl implements GameProcessor {
       completedRoundData.add(new CompletedRoundData(origin, antipode, submission, distance));
     }
 
-    return new GameResultsResponse(playerName, completedRoundData, totalDistance);
+    return new GameResultsResponse(userDataEntity.getUserName(), completedRoundData, totalDistance);
   }
 
   private GameDataEntity updateGameData(long gameId) {
