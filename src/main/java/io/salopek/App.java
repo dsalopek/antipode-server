@@ -1,24 +1,32 @@
 package io.salopek;
 
 import io.dropwizard.Application;
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthValueFactoryProvider;
+import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import io.federecio.dropwizard.swagger.SwaggerBundle;
-import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 import io.salopek.dao.GameDataDAO;
 import io.salopek.dao.GameIdDAO;
 import io.salopek.dao.PointDataDAO;
 import io.salopek.dao.RoundDataDAO;
+import io.salopek.dao.UserDataDAO;
 import io.salopek.db.DatabaseService;
 import io.salopek.db.DatabaseServiceImpl;
 import io.salopek.filter.AntipodeFilter;
+import io.salopek.model.UserData;
+import io.salopek.processor.AuthenticationProcessor;
+import io.salopek.processor.AuthenticationProcessorImpl;
 import io.salopek.processor.GameProcessor;
 import io.salopek.processor.GameProcessorImpl;
+import io.salopek.resource.AuthenticationResource;
 import io.salopek.resource.GameResource;
+import io.salopek.security.CoreAuthenticator;
+import io.salopek.security.CoreAuthorizer;
 import io.salopek.util.DistanceCalculator;
 import io.salopek.util.HaversineDistanceCalculator;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -43,13 +51,6 @@ public class App extends Application<AppConfiguration> {
     bootstrap.setConfigurationSourceProvider(new SubstitutingSourceProvider(
       bootstrap.getConfigurationSourceProvider(),
       new EnvironmentVariableSubstitutor(false)));
-
-    bootstrap.addBundle(new SwaggerBundle<AppConfiguration>() {
-      @Override
-      protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(AppConfiguration configuration) {
-        return configuration.swaggerBundleConfiguration;
-      }
-    });
   }
 
   @Override
@@ -70,6 +71,10 @@ public class App extends Application<AppConfiguration> {
     RoundDataDAO roundDataDAO = jdbi.onDemand(RoundDataDAO.class);
     PointDataDAO pointDataDAO = jdbi.onDemand(PointDataDAO.class);
     GameIdDAO gameIdDAO = jdbi.onDemand(GameIdDAO.class);
+    UserDataDAO userDataDAO = jdbi.onDemand(UserDataDAO.class);
+
+    DatabaseService databaseService = new DatabaseServiceImpl(gameDataDAO, roundDataDAO, pointDataDAO, gameIdDAO,
+      userDataDAO);
 
     environment.jersey().register(new AbstractBinder() {
       @Override
@@ -82,12 +87,24 @@ public class App extends Application<AppConfiguration> {
         bind(roundDataDAO).to(RoundDataDAO.class);
         bind(pointDataDAO).to(PointDataDAO.class);
         bind(gameIdDAO).to(GameIdDAO.class);
+        bind(userDataDAO).to(UserDataDAO.class);
+        bind(databaseService).to(DatabaseService.class);
         bind(GameProcessorImpl.class).to(GameProcessor.class).in(Singleton.class);
+        bind(AuthenticationProcessorImpl.class).to(AuthenticationProcessor.class);
         bind(HaversineDistanceCalculator.class).to(DistanceCalculator.class).in(Singleton.class);
         bind(DatabaseServiceImpl.class).to(DatabaseService.class).in(Singleton.class);
       }
     });
-
+    environment.jersey().register(AuthenticationResource.class);
     environment.jersey().register(GameResource.class);
+
+    environment.jersey()
+      .register(new AuthDynamicFeature(new OAuthCredentialAuthFilter.Builder<UserData>()
+        .setAuthenticator(new CoreAuthenticator(databaseService))
+        .setAuthorizer(new CoreAuthorizer())
+        .setPrefix("Bearer")
+        .buildAuthFilter()));
+
+    environment.jersey().register(new AuthValueFactoryProvider.Binder<>(UserData.class));
   }
 }

@@ -5,9 +5,9 @@ import io.salopek.db.DatabaseService;
 import io.salopek.entity.GameDataEntity;
 import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
+import io.salopek.entity.UserDataEntity;
 import io.salopek.model.Point;
 import io.salopek.model.request.FinishGameRequest;
-import io.salopek.model.request.NewGameRequest;
 import io.salopek.model.request.RoundSubmissionRequest;
 import io.salopek.model.response.CompletedRoundData;
 import io.salopek.model.response.GameResultsResponse;
@@ -39,10 +39,9 @@ class GameProcessorImplTest {
 
   @Test
   void newGame() {
-    NewGameRequest newGameRequest = new NewGameRequest("Dylan");
 
     when(databaseService.saveNewGame(any())).thenReturn(1L);
-    RoundResponse actualResponse = gameProcessor.newGame(newGameRequest);
+    RoundResponse actualResponse = gameProcessor.newGame(null);
 
     assertThat(actualResponse.getGameUUID()).isNotNull();
     assertThat(actualResponse.getOrigin()).isNotNull();
@@ -68,7 +67,6 @@ class GameProcessorImplTest {
 
   @Test
   void utilizeGameIdCache() {
-    NewGameRequest newGameRequest = new NewGameRequest("Dylan");
     when(databaseService.saveNewGame(any())).thenReturn(1L);
 
     Point antipode = antipode();
@@ -78,7 +76,7 @@ class GameProcessorImplTest {
     when(databaseService.saveNewRound(any())).thenReturn(1L);
     when(databaseService.getGameId(anyString())).thenReturn(1L);
     when(databaseService.saveNewPoint(any())).thenReturn(1L);
-    RoundResponse newGameResponse = gameProcessor.newGame(newGameRequest);
+    RoundResponse newGameResponse = gameProcessor.newGame(null);
     RoundSubmissionRequest roundSubmission = new RoundSubmissionRequest(newGameResponse.getGameUUID(), origin,
       antipode);
     assertDoesNotThrow(() -> gameProcessor.submitRound(roundSubmission));
@@ -87,7 +85,7 @@ class GameProcessorImplTest {
   @Test
   void finishGame() {
     FinishGameRequest finishGameRequest = new FinishGameRequest("asdf-asdf");
-    GameDataEntity gameDataEntity = new GameDataEntity(1L, "Dylan", Timestamp.from(Instant.now()), null);
+    GameDataEntity gameDataEntity = new GameDataEntity(1L, 1L, Timestamp.from(Instant.now()), null);
     List<RoundDataEntity> roundDataEntities = Arrays.asList(
       new RoundDataEntity(1L, 1L, 15000),
       new RoundDataEntity(2L, 1L, 892340),
@@ -107,9 +105,10 @@ class GameProcessorImplTest {
       new PointEntity(9L, 3L, PointType.SUBMISSION, -80, -135)
     );
 
-    String expectedPlayerName = gameDataEntity.getPlayerName();
+    String expectedPlayerName = "Dylan";
     long expectedTotalDistance = 941883L;
 
+    when(databaseService.getUserByUserId(anyLong())).thenReturn(new UserDataEntity(1L, expectedPlayerName, "", ""));
     when(databaseService.getGameId(anyString())).thenReturn(1L);
     when(databaseService.getGameDataByGameId(anyLong())).thenReturn(gameDataEntity);
     when(databaseService.getRoundDataByGameId(anyLong())).thenReturn(roundDataEntities);

@@ -5,24 +5,24 @@ import java.time.Instant;
 
 public class GameDataEntity {
   private long gameId;
-  private String playerName;
+  private long userId;
   private Timestamp startTime;
   private Timestamp endTime;
 
   public GameDataEntity() {
   }
 
-  public GameDataEntity(String playerName) {
-    this(0L, playerName, Timestamp.from(Instant.now()), null);
+  public GameDataEntity(long userId) {
+    this(0L, userId, Timestamp.from(Instant.now()), null);
   }
 
-  public GameDataEntity(String playerName, Timestamp startTime, Timestamp endTime) {
-    this(0L, playerName, startTime, endTime);
+  public GameDataEntity(long userId, Timestamp startTime, Timestamp endTime) {
+    this(0L, userId, startTime, endTime);
   }
 
-  public GameDataEntity(long gameId, String playerName, Timestamp startTime, Timestamp endTime) {
+  public GameDataEntity(long gameId, long userId, Timestamp startTime, Timestamp endTime) {
     this.gameId = gameId;
-    this.playerName = playerName;
+    this.userId = userId;
     this.startTime = startTime;
     this.endTime = endTime;
   }
@@ -35,12 +35,12 @@ public class GameDataEntity {
     this.gameId = gameId;
   }
 
-  public String getPlayerName() {
-    return playerName;
+  public long getUserId() {
+    return userId;
   }
 
-  public void setPlayerName(String playerName) {
-    this.playerName = playerName;
+  public void setUserId(long userId) {
+    this.userId = userId;
   }
 
   public Timestamp getStartTime() {
@@ -63,7 +63,7 @@ public class GameDataEntity {
   public String toString() {
     return "GameData{" +
       "gameId=" + gameId +
-      ", playerName='" + playerName + '\'' +
+      ", userId='" + userId + '\'' +
       ", startTime=" + startTime +
       ", endTime=" + endTime +
       '}';

@@ -3,6 +3,7 @@ package io.salopek.db;
 import io.salopek.entity.GameDataEntity;
 import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
+import io.salopek.entity.UserDataEntity;
 
 import java.util.List;
 
@@ -24,4 +25,14 @@ public interface DatabaseService {
   List<RoundDataEntity> getRoundDataByGameId(long gameId);
 
   List<PointEntity> getPointDataByRoundIds(List<Long> roundIds);
+
+  boolean createNewUser(UserDataEntity userData);
+
+  boolean updateAccessTokenByUserId(String accessToken, long userId);
+
+  UserDataEntity getUserByAccessToken(String accessToken);
+
+  UserDataEntity getUserByUsername(String userName);
+
+  UserDataEntity getUserByUserId(long userId);
 }

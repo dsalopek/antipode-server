@@ -1,9 +1,16 @@
 insert into game_data
-(game_id, player_name, start_ts, end_ts)
+(game_id, user_id, start_ts, end_ts)
 values
-(1, 'Dylan', '2020-08-07 15:51:38.053', '2020-08-07 15:51:38.053'),
-(2, 'Jennifer', '2020-08-07 15:51:38.053', '2020-08-07 15:51:38.053'),
-(3, 'Alex', '2020-08-07 15:51:38.053', '2020-08-07 15:51:38.053');
+(1, 1, '2020-08-07 15:51:38.053', '2020-08-07 15:51:38.053'),
+(2, 2, '2020-08-07 15:51:38.053', '2020-08-07 15:51:38.053'),
+(3, 3, '2020-08-07 15:51:38.053', '2020-08-07 15:51:38.053');
+
+insert into user_data
+(user_id, user_name, password, access_token)
+values
+(1, 'Dylan', '', 'TOKEN1'),
+(2, 'Jennifer', '', 'TOKEN2'),
+(3, 'Alex', '', 'TOKEN3');
 
 insert into game_id_map
 (game_id, game_uuid)

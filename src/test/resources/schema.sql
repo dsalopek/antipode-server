@@ -1,9 +1,17 @@
 create table game_data
 (
-    game_id     bigint auto_increment not null,
-    player_name varchar(255)          null,
-    start_ts    timestamp             null,
-    end_ts      timestamp             null
+    game_id  bigint auto_increment not null,
+    user_id  bigint                null,
+    start_ts timestamp             null,
+    end_ts   timestamp             null
+);
+
+create table user_data
+(
+    user_id      bigint auto_increment not null,
+    user_name    varchar(255)          null,
+    password     varchar(255)          null,
+    access_token varchar(255)          null
 );
 
 create table game_id_map

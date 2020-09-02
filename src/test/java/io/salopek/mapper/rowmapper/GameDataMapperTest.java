@@ -24,14 +24,14 @@ class GameDataMapperTest {
   void map() throws SQLException {
     Timestamp timestamp = Timestamp.from(Instant.now());
     data.put("game_id", 15L);
-    data.put("player_name", "Dylan");
+    data.put("user_id", 1L);
     data.put("start_ts", timestamp);
     data.put("end_ts", timestamp);
 
     ResultSet resultSet = new MockResultSet(data);
     StatementContext ctx = mock(StatementContext.class);
 
-    GameDataEntity expectedOutput = new GameDataEntity(15L, "Dylan", timestamp, timestamp);
+    GameDataEntity expectedOutput = new GameDataEntity(15L, 1L, timestamp, timestamp);
 
     assertThat(gameDataMapper.map(resultSet, ctx)).usingRecursiveComparison().isEqualTo(expectedOutput);
 

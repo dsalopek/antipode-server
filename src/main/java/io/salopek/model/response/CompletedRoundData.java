@@ -8,7 +8,8 @@ public class CompletedRoundData {
   private Point submission;
   private double distance;
 
-  private CompletedRoundData(){}
+  private CompletedRoundData() {
+  }
 
   public CompletedRoundData(Point origin, Point antipode, Point submission, double distance) {
     this.origin = origin;

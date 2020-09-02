@@ -58,12 +58,12 @@ class LogUtilsTest {
     String key = "";
     Object value = null;
 
-    assertThat(LogUtils.logObject(key, value)).isEqualTo("");
+    assertThat(LogUtils.logObject(key, value)).isEmpty();
 
     key = null;
     value = null;
 
-    assertThat(LogUtils.logObject(key, value)).isEqualTo("");
+    assertThat(LogUtils.logObject(key, value)).isEmpty();
   }
 
 }
