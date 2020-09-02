@@ -38,7 +38,8 @@ public class AntipodeFilter implements Filter {
 
       LogBuilder lb = LogBuilder.get().log(LogUtils.methodEntry(uri)).kv("HTTPMethod", method);
       if (!method.equals(HttpMethod.GET)) {
-        lb.kv("request", wrappedRequest.getReader().lines().map(String::trim).collect(Collectors.joining()));
+        String requestString = wrappedRequest.getReader().lines().map(String::trim).collect(Collectors.joining());
+        lb.kv("request", maskKeyValues(requestString));
       }
       LOGGER.info(lb.build());
 
@@ -51,5 +52,11 @@ public class AntipodeFilter implements Filter {
       lb.log(LogUtils.methodExit(uri, duration)).kv("response", new String(wrappedResponse.getCopy()));
       LOGGER.info(lb.build());
     }
+  }
+
+  private static String maskKeyValues(String s) {
+    final String MASK = "***********";
+
+    return s.replaceAll("\"password\":(\\s)*\"(.*)\"", "\"password\": \"" + MASK + "\"");
   }
 }
