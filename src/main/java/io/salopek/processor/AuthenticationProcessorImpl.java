@@ -30,7 +30,7 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
   @Override
   public AccessTokenResponse register(RegisterRequest registerRequest) {
 
-    UserDataEntity userData = databaseService.isUsernameAvailable(registerRequest.getUserName());
+    UserDataEntity userData = databaseService.getUserByUsername(registerRequest.getUserName());
     if (userData != null) {
       throw new BadRequestException(EXC_USER_EXISTS);
     }

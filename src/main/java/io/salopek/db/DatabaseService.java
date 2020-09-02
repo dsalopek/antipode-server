@@ -26,8 +26,6 @@ public interface DatabaseService {
 
   List<PointEntity> getPointDataByRoundIds(List<Long> roundIds);
 
-  UserDataEntity isUsernameAvailable(String userName);
-
   boolean createNewUser(UserDataEntity userData);
 
   boolean updateAccessTokenByUserId(String accessToken, long userId);

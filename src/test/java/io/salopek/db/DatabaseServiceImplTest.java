@@ -13,6 +13,7 @@ import io.salopek.dao.UserDataDAO;
 import io.salopek.entity.GameDataEntity;
 import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
+import io.salopek.entity.UserDataEntity;
 import org.eclipse.jetty.util.component.LifeCycle;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.AfterEach;
@@ -151,5 +152,58 @@ class DatabaseServiceImplTest {
         new PointEntity(2, 1, PointType.ANTIPODE, -45, -30),
         new PointEntity(3, 1, PointType.SUBMISSION, -46, -33));
     assertThat(databaseService.getPointDataByRoundIds(roundIds)).usingRecursiveComparison().isEqualTo(expectedData);
+  }
+
+  @Test
+  void getUserByUsername() {
+    String userName = "Dylan";
+    assertThat(databaseService.getUserByUsername(userName)).isNotNull();
+
+    String userName2 = "Carol";
+    assertThat(databaseService.getUserByUsername(userName2)).isNull();
+  }
+
+  @Test
+  void createNewUser() {
+    UserDataEntity userData = new UserDataEntity(0L, "Rourke", "asdfg", "asdfg");
+    assertThat(databaseService.createNewUser(userData)).isTrue();
+  }
+
+  @Test
+  void updateAccessTokenByUserId() {
+    String accessToken = "TOKEN1111";
+    long userId = 1L;
+    assertThat(databaseService.updateAccessTokenByUserId(accessToken, userId)).isTrue();
+  }
+
+  @Test
+  void updateAccessTokenByUserId_InvalidId() {
+    String accessToken = "TOKEN1111";
+    long userId = 15L;
+    assertThat(databaseService.updateAccessTokenByUserId(accessToken, userId)).isFalse();
+  }
+
+  @Test
+  void getUserByAccessToken() {
+    String accessToken = "TOKEN1";
+    assertThat(databaseService.getUserByAccessToken(accessToken)).isNotNull();
+  }
+
+  @Test
+  void getUserByAccessToken_InvalidToken() {
+    String accessToken = "abcd";
+    assertThat(databaseService.getUserByAccessToken(accessToken)).isNull();
+  }
+
+  @Test
+  void getUserByUserId() {
+    long userId = 1L;
+    assertThat(databaseService.getUserByUserId(userId)).isNotNull();
+  }
+
+  @Test
+  void getUserByUserId_InvalidId() {
+    long userId = 420L;
+    assertThat(databaseService.getUserByUserId(userId)).isNull();
   }
 }

@@ -87,12 +87,6 @@ public class DatabaseServiceImpl implements DatabaseService {
 
   @Loggable
   @Override
-  public UserDataEntity isUsernameAvailable(String userName) {
-    return userDataDAO.isUsernameAvailable(userName);
-  }
-
-  @Loggable
-  @Override
   public UserDataEntity getUserByUsername(String userName) {
     return userDataDAO.getUserByUserName(userName);
   }
