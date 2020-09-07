@@ -68,6 +68,12 @@ class GameResourceTest {
   }
 
   @Test
+  void newGame_invalidParams() {
+    Response response = ext.target(GAME_ENDPOINT + NEW_GAME).request().post(null);
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED_401);
+  }
+
+  @Test
   void submitRound() {
     Point origin = new Point();
     Point submission = new Point();
@@ -86,6 +92,33 @@ class GameResourceTest {
   }
 
   @Test
+  void submitRound_invalidParams() {
+    Point origin = new Point();
+    Point submission = new Point();
+    RoundSubmissionRequest request = new RoundSubmissionRequest("1234", origin, submission);
+    Response response = ext.target(GAME_ENDPOINT + SUBMIT_ROUND).request().post(Entity.json(request));
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED_401);
+
+    when(databaseService.getUserByAccessToken(anyString())).thenReturn(new UserDataEntity(1L, "Dylan", "", ""));
+
+    request = new RoundSubmissionRequest("", origin, submission);
+    when(databaseService.getUserByAccessToken(anyString())).thenReturn(new UserDataEntity(1L, "Dylan", "", ""));
+    response = ext.target(GAME_ENDPOINT + SUBMIT_ROUND).request().header("Authorization", "Bearer TOKEN1")
+      .post(Entity.json(request));
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY_422);
+
+    request = new RoundSubmissionRequest("1234", null, submission);
+    response = ext.target(GAME_ENDPOINT + SUBMIT_ROUND).request().header("Authorization", "Bearer TOKEN1")
+      .post(Entity.json(request));
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY_422);
+
+    request = new RoundSubmissionRequest("1234", origin, null);
+    response = ext.target(GAME_ENDPOINT + SUBMIT_ROUND).request().header("Authorization", "Bearer TOKEN1")
+      .post(Entity.json(request));
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY_422);
+  }
+
+  @Test
   void finishGame() {
     FinishGameRequest finishGameRequest = new FinishGameRequest("asdf-1234");
     GameResultsResponse gameResultsResponse = new GameResultsResponse("player_name", completedRoundData(), 0);
@@ -99,6 +132,20 @@ class GameResourceTest {
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK_200);
     GameResultsResponse actual = response.readEntity(GameResultsResponse.class);
     assertThat(actual).usingRecursiveComparison().isEqualTo(gameResultsResponse);
+  }
+
+  @Test
+  void finishGame_invalidParams() {
+
+    FinishGameRequest request = new FinishGameRequest("1234");
+    when(databaseService.getUserByAccessToken(anyString())).thenReturn(new UserDataEntity(1L, "Dylan", "", ""));
+    Response response = ext.target(GAME_ENDPOINT + FINISH_GAME).request().post(Entity.json(request));
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED_401);
+
+    request = new FinishGameRequest("");
+    response = ext.target(GAME_ENDPOINT + FINISH_GAME).request().header("Authorization", "Bearer TOKEN1")
+      .post(Entity.json(request));
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY_422);
   }
 
   private List<CompletedRoundData> completedRoundData() {
