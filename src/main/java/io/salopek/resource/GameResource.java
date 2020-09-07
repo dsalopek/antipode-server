@@ -11,6 +11,8 @@ import io.salopek.processor.GameProcessor;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -44,15 +46,16 @@ public class GameResource {
   @Loggable
   @POST
   @Path(SUBMIT_ROUND)
-  public Response submitRound(RoundSubmissionRequest roundSubmission) {
+  public Response submitRound(@NotNull @Valid RoundSubmissionRequest roundSubmission) {
     RoundResponse roundResponse = gameProcessor.submitRound(roundSubmission);
+
     return Response.ok(roundResponse).build();
   }
 
   @Loggable
   @POST
   @Path(FINISH_GAME)
-  public Response finishGame(FinishGameRequest finishGameRequest) {
+  public Response finishGame(@NotNull @Valid FinishGameRequest finishGameRequest) {
     GameResultsResponse gameResultsResponse = gameProcessor.finishGame(finishGameRequest);
     return Response.ok(gameResultsResponse).build();
   }

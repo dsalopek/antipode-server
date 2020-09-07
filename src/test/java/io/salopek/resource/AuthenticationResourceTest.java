@@ -43,6 +43,17 @@ class AuthenticationResourceTest {
   }
 
   @Test
+  void register_invalidParams() {
+    RegisterRequest request = new RegisterRequest("", "abcd");
+    Response response = ext.target(AUTH_ENDPOINT + REGISTER).request().post(Entity.json(request));
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY_422);
+
+    request = new RegisterRequest("Dylan", "");
+    response = ext.target(AUTH_ENDPOINT + REGISTER).request().post(Entity.json(request));
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY_422);
+  }
+
+  @Test
   void login() {
     LoginRequest request = new LoginRequest("Tony", "asdfg");
     AccessTokenResponse accessTokenResponse = new AccessTokenResponse("asdfghjkl123456789");
@@ -53,5 +64,16 @@ class AuthenticationResourceTest {
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK_200);
     AccessTokenResponse actual = response.readEntity(AccessTokenResponse.class);
     assertThat(actual).usingRecursiveComparison().isEqualTo(accessTokenResponse);
+  }
+
+  @Test
+  void login_invalidParams() {
+    LoginRequest request = new LoginRequest("", "abcd");
+    Response response = ext.target(AUTH_ENDPOINT + LOGIN).request().post(Entity.json(request));
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY_422);
+
+    request = new LoginRequest("Dylan", "");
+    response = ext.target(AUTH_ENDPOINT + LOGIN).request().post(Entity.json(request));
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY_422);
   }
 }
