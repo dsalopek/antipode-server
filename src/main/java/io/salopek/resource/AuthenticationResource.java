@@ -7,6 +7,8 @@ import io.salopek.model.response.AccessTokenResponse;
 import io.salopek.processor.AuthenticationProcessor;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -31,7 +33,7 @@ public class AuthenticationResource {
   @Loggable
   @POST
   @Path(REGISTER)
-  public Response register(RegisterRequest registerRequest) {
+  public Response register(@NotNull @Valid RegisterRequest registerRequest) {
     AccessTokenResponse accessToken = authenticationProcessor.register(registerRequest);
     return Response.ok(accessToken).build();
   }
@@ -39,7 +41,7 @@ public class AuthenticationResource {
   @Loggable
   @POST
   @Path(LOGIN)
-  public Response login(LoginRequest loginRequest) {
+  public Response login(@NotNull @Valid LoginRequest loginRequest) {
     AccessTokenResponse accessToken = authenticationProcessor.login(loginRequest);
     return Response.ok(accessToken).build();
   }
