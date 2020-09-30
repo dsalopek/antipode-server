@@ -84,7 +84,13 @@ class GameProcessorImplTest {
 
   @Test
   void finishGame() {
-    FinishGameRequest finishGameRequest = new FinishGameRequest("asdf-asdf");
+
+    Point antipode = antipode();
+    Point origin = antipode();
+
+    RoundSubmissionRequest roundSubmission = new RoundSubmissionRequest(UUID.randomUUID().toString(), origin, antipode);
+
+
     GameDataEntity gameDataEntity = new GameDataEntity(1L, 1L, Timestamp.from(Instant.now()), null);
     List<RoundDataEntity> roundDataEntities = Arrays.asList(
       new RoundDataEntity(1L, 1L, 15000),
@@ -114,7 +120,7 @@ class GameProcessorImplTest {
     when(databaseService.getRoundDataByGameId(anyLong())).thenReturn(roundDataEntities);
     when(databaseService.getPointDataByRoundIds(anyList())).thenReturn(pointEntities);
 
-    GameResultsResponse actualResponse = gameProcessor.finishGame(finishGameRequest);
+    GameResultsResponse actualResponse = gameProcessor.finishGame(roundSubmission);
 
     assertThat(actualResponse.getPlayerName()).isEqualTo(expectedPlayerName);
     assertThat(actualResponse.getTotalDistance()).isEqualTo(expectedTotalDistance);
