@@ -114,4 +114,11 @@ public class DatabaseServiceImpl implements DatabaseService {
   public UserDataEntity getUserByUserId(long userId) {
     return userDataDAO.getUserByUserId(userId);
   }
+
+  @Loggable
+  @Override
+  public boolean doesAccessTokenExist(String accessToken) {
+    UserDataEntity data = userDataDAO.getUserByAccessToken(accessToken);
+    return null != data;
+  }
 }

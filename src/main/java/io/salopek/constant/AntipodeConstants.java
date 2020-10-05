@@ -14,6 +14,7 @@ public class AntipodeConstants {
   public static final String EXC_USER_EXISTS = "User already exists.";
   public static final String EXC_USER_NOT_FOUND = "Username not found.";
   public static final String EXC_INVALID_PASSWORD = "Invalid password.";
+  public static final String EXC_INVALID_TOKEN = "Invalid token.";
 
   //  Values
   public static final double LONGITUDE = 180d;
@@ -27,6 +28,7 @@ public class AntipodeConstants {
   public static final String AUTH_ENDPOINT = "/auth";
   public static final String REGISTER = "/register";
   public static final String LOGIN = "/login";
+  public static final String VALIDATE_TOKEN = "/validate";
 
   //  Exclusion Keys
   public static final String PASSWORD = "password";

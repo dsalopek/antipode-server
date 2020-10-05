@@ -35,4 +35,6 @@ public interface DatabaseService {
   UserDataEntity getUserByUsername(String userName);
 
   UserDataEntity getUserByUserId(long userId);
+
+  boolean doesAccessTokenExist(String accessToken);
 }

@@ -6,6 +6,7 @@ import io.salopek.entity.UserDataEntity;
 import io.salopek.logging.Loggable;
 import io.salopek.model.request.LoginRequest;
 import io.salopek.model.request.RegisterRequest;
+import io.salopek.model.request.ValidateTokenRequest;
 import io.salopek.model.response.AccessTokenResponse;
 import io.salopek.util.HashUtils;
 
@@ -13,7 +14,10 @@ import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
+import java.time.Instant;
+
 import static io.salopek.constant.AntipodeConstants.EXC_INVALID_PASSWORD;
+import static io.salopek.constant.AntipodeConstants.EXC_INVALID_TOKEN;
 import static io.salopek.constant.AntipodeConstants.EXC_USER_EXISTS;
 import static io.salopek.constant.AntipodeConstants.EXC_USER_NOT_FOUND;
 
@@ -59,5 +63,21 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
     String accessToken = HashUtils.randomHashByString(userData.getUserName());
     databaseService.updateAccessTokenByUserId(accessToken, userData.getUserId());
     return new AccessTokenResponse(accessToken);
+  }
+
+  @Loggable
+  @Override
+  public boolean validateTokenRequest(ValidateTokenRequest validateTokenRequest) {
+
+    String accessToken = validateTokenRequest.getAccessToken();
+
+    boolean isValidToken = databaseService.doesAccessTokenExist(accessToken);
+
+    if (!isValidToken) {
+      throw new NotFoundException(EXC_INVALID_TOKEN);
+    }
+
+    return true;
+
   }
 }
