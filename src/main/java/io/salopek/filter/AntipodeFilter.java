@@ -46,8 +46,9 @@ public class AntipodeFilter implements Filter {
       String method = wrappedRequest.getMethod();
       String uri = wrappedRequest.getRequestURI();
 
+
       Thread.currentThread()
-        .setName(Thread.currentThread().getName() + " " + REQUEST_ID + UUID.randomUUID().toString());
+        .setName(Thread.currentThread().getId() + " " + REQUEST_ID + UUID.randomUUID().toString());
 
       LogBuilder lb = LogBuilder.get().log(LogUtils.methodEntry(uri)).kv(HTTP_METHOD, method);
       if (!method.equals(HttpMethod.GET)) {

@@ -26,6 +26,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static io.salopek.constant.AntipodeConstants.FINISH_GAME;
 import static io.salopek.constant.AntipodeConstants.GAME_ENDPOINT;
@@ -120,6 +121,7 @@ class GameResourceTest {
 
   @Test
   void finishGame() {
+    RoundSubmissionRequest roundSubmission = new RoundSubmissionRequest(UUID.randomUUID().toString(), new Point(), new Point());
     FinishGameRequest finishGameRequest = new FinishGameRequest("asdf-1234");
     GameResultsResponse gameResultsResponse = new GameResultsResponse("player_name", completedRoundData(), 0);
 
@@ -127,7 +129,7 @@ class GameResourceTest {
     when(databaseService.getUserByAccessToken(anyString())).thenReturn(new UserDataEntity(1L, "Dylan", "", ""));
 
     Response response = ext.target(GAME_ENDPOINT + FINISH_GAME).request().header("Authorization", "Bearer TOKEN1")
-      .post(Entity.json(finishGameRequest));
+      .post(Entity.json(roundSubmission));
 
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK_200);
     GameResultsResponse actual = response.readEntity(GameResultsResponse.class);
