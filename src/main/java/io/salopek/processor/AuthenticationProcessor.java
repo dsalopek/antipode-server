@@ -2,6 +2,7 @@ package io.salopek.processor;
 
 import io.salopek.model.request.LoginRequest;
 import io.salopek.model.request.RegisterRequest;
+import io.salopek.model.request.ValidateTokenRequest;
 import io.salopek.model.response.AccessTokenResponse;
 
 public interface AuthenticationProcessor {
@@ -10,4 +11,5 @@ public interface AuthenticationProcessor {
 
   AccessTokenResponse login(LoginRequest loginRequest);
 
+  boolean validateTokenRequest(ValidateTokenRequest validateTokenRequest);
 }
