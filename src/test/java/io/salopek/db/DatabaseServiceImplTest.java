@@ -5,6 +5,7 @@ import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.util.Resources;
 import io.salopek.constant.PointType;
+import io.salopek.dao.DBDao;
 import io.salopek.dao.GameDataDAO;
 import io.salopek.dao.GameIdDAO;
 import io.salopek.dao.PointDataDAO;
@@ -39,6 +40,7 @@ class DatabaseServiceImplTest {
   private PointDataDAO pointDataDAO;
   private GameIdDAO gameIdDAO;
   private UserDataDAO userDataDAO;
+  private DBDao dbDao;
 
   @BeforeEach
   void setUp() throws Exception {
@@ -61,11 +63,12 @@ class DatabaseServiceImplTest {
     pointDataDAO = jdbi.onDemand(PointDataDAO.class);
     gameIdDAO = jdbi.onDemand(GameIdDAO.class);
     userDataDAO = jdbi.onDemand(UserDataDAO.class);
+    dbDao = jdbi.onDemand(DBDao.class);
 
     for (LifeCycle lc : environment.lifecycle().getManagedObjects()) {
       lc.start();
     }
-    databaseService = new DatabaseServiceImpl(gameDataDAO, roundDataDAO, pointDataDAO, gameIdDAO, userDataDAO);
+    databaseService = new DatabaseServiceImpl(gameDataDAO, roundDataDAO, pointDataDAO, gameIdDAO, userDataDAO, dbDao);
   }
 
   @AfterEach

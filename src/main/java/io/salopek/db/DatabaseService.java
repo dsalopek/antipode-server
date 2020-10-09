@@ -8,6 +8,8 @@ import io.salopek.entity.UserDataEntity;
 import java.util.List;
 
 public interface DatabaseService {
+  boolean isConnected();
+
   long saveNewGame(GameDataEntity gameDataEntity);
 
   long saveNewRound(RoundDataEntity roundDataEntity);
@@ -37,4 +39,6 @@ public interface DatabaseService {
   UserDataEntity getUserByUserId(long userId);
 
   boolean doesAccessTokenExist(String accessToken);
+
+  boolean isUsernameAvailable(String username);
 }

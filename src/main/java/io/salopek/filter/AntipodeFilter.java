@@ -26,6 +26,8 @@ import static io.salopek.constant.AntipodeConstants.PASSWORD;
 import static io.salopek.constant.AntipodeConstants.REQUEST;
 import static io.salopek.constant.AntipodeConstants.REQUEST_ID;
 import static io.salopek.constant.AntipodeConstants.RESPONSE;
+import static io.salopek.constant.AntipodeConstants.STATUS;
+import static io.salopek.constant.AntipodeConstants.THREAD_PREFIX;
 
 public class AntipodeFilter implements Filter {
 
@@ -46,9 +48,8 @@ public class AntipodeFilter implements Filter {
       String method = wrappedRequest.getMethod();
       String uri = wrappedRequest.getRequestURI();
 
-
       Thread.currentThread()
-        .setName(Thread.currentThread().getId() + " " + REQUEST_ID + UUID.randomUUID().toString());
+        .setName(THREAD_PREFIX + Thread.currentThread().getId() + " " + REQUEST_ID + UUID.randomUUID().toString());
 
       LogBuilder lb = LogBuilder.get().log(LogUtils.methodEntry(uri)).kv(HTTP_METHOD, method);
       if (!method.equals(HttpMethod.GET)) {
@@ -61,12 +62,17 @@ public class AntipodeFilter implements Filter {
 
       long duration = System.currentTimeMillis() - start;
 
-      lb.log(LogUtils.methodExit(uri, duration)).kv(RESPONSE, maskKeyValues(new String(wrappedResponse.getCopy())));
+      lb.log(LogUtils.methodExit(uri, duration)).kv(RESPONSE, maskKeyValues(new String(wrappedResponse.getCopy())))
+        .kv(STATUS, wrappedResponse.getStatus());
       LOGGER.info(lb.build());
     }
   }
 
   private static String maskKeyValues(String s) {
+
+    if (null == s || s.isEmpty()) {
+      s = "{}";
+    }
 
     List<String> maskedKeys = Arrays.asList(PASSWORD, ACCESS_TOKEN);
 

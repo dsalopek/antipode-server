@@ -3,6 +3,7 @@ package io.salopek.resource;
 import io.salopek.logging.Loggable;
 import io.salopek.model.request.LoginRequest;
 import io.salopek.model.request.RegisterRequest;
+import io.salopek.model.request.UsernameAvailabilityRequest;
 import io.salopek.model.request.ValidateTokenRequest;
 import io.salopek.model.response.AccessTokenResponse;
 import io.salopek.processor.AuthenticationProcessor;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static io.salopek.constant.AntipodeConstants.AUTH_ENDPOINT;
+import static io.salopek.constant.AntipodeConstants.AVAILABILITY;
 import static io.salopek.constant.AntipodeConstants.LOGIN;
 import static io.salopek.constant.AntipodeConstants.REGISTER;
 import static io.salopek.constant.AntipodeConstants.VALIDATE_TOKEN;
@@ -53,6 +55,14 @@ public class AuthenticationResource {
   @Path(VALIDATE_TOKEN)
   public Response validateToken(@NotNull @Valid ValidateTokenRequest validateTokenRequest) {
     authenticationProcessor.validateTokenRequest(validateTokenRequest);
+    return Response.ok().build();
+  }
+
+  @Loggable
+  @POST
+  @Path(AVAILABILITY)
+  public Response availability(@NotNull @Valid UsernameAvailabilityRequest usernameAvailabilityRequest) {
+    authenticationProcessor.availability(usernameAvailabilityRequest);
     return Response.ok().build();
   }
 }

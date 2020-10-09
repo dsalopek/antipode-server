@@ -10,6 +10,7 @@ import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.salopek.dao.DBDao;
 import io.salopek.dao.GameDataDAO;
 import io.salopek.dao.GameIdDAO;
 import io.salopek.dao.PointDataDAO;
@@ -18,6 +19,7 @@ import io.salopek.dao.UserDataDAO;
 import io.salopek.db.DatabaseService;
 import io.salopek.db.DatabaseServiceImpl;
 import io.salopek.filter.AntipodeFilter;
+import io.salopek.health.AntipodeHealthCheck;
 import io.salopek.model.UserData;
 import io.salopek.processor.AuthenticationProcessor;
 import io.salopek.processor.AuthenticationProcessorImpl;
@@ -65,17 +67,16 @@ public class App extends Application<AppConfiguration> {
 
   private void registerJerseyComponents(Environment environment, AppConfiguration configuration) {
     final JdbiFactory factory = new JdbiFactory();
-    final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(), "mysql");
+    final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(), "database");
 
     GameDataDAO gameDataDAO = jdbi.onDemand(GameDataDAO.class);
     RoundDataDAO roundDataDAO = jdbi.onDemand(RoundDataDAO.class);
     PointDataDAO pointDataDAO = jdbi.onDemand(PointDataDAO.class);
     GameIdDAO gameIdDAO = jdbi.onDemand(GameIdDAO.class);
     UserDataDAO userDataDAO = jdbi.onDemand(UserDataDAO.class);
-
+    DBDao dbDao = jdbi.onDemand(DBDao.class);
     DatabaseService databaseService = new DatabaseServiceImpl(gameDataDAO, roundDataDAO, pointDataDAO, gameIdDAO,
-      userDataDAO);
-
+      userDataDAO, dbDao);
     environment.jersey().register(new AbstractBinder() {
       @Override
       protected void configure() {
@@ -88,6 +89,7 @@ public class App extends Application<AppConfiguration> {
         bind(pointDataDAO).to(PointDataDAO.class);
         bind(gameIdDAO).to(GameIdDAO.class);
         bind(userDataDAO).to(UserDataDAO.class);
+        bind(dbDao).to(DBDao.class);
         bind(databaseService).to(DatabaseService.class);
         bind(GameProcessorImpl.class).to(GameProcessor.class).in(Singleton.class);
         bind(AuthenticationProcessorImpl.class).to(AuthenticationProcessor.class);
