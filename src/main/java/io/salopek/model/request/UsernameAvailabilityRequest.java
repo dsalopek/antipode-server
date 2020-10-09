@@ -6,19 +6,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotEmpty;
 
 public class UsernameAvailabilityRequest {
-  @NotEmpty(message = "username must not be empty!")
-  private String username;
+  @NotEmpty(message = "userName must not be empty!")
+  private String userName;
 
   private UsernameAvailabilityRequest() {
   }
 
   @JsonCreator
-  public UsernameAvailabilityRequest(@JsonProperty("username") String username) {
-    this.username = username;
+  public UsernameAvailabilityRequest(@JsonProperty("userName") String userName) {
+    this.userName = userName;
   }
 
-  @JsonProperty("username")
-  public String getUsername() {
-    return username;
+  @JsonProperty("userName")
+  public String getUserName() {
+    return userName;
   }
 }

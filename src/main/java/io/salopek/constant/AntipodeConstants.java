@@ -26,6 +26,7 @@ public class AntipodeConstants {
   public static final String NEW_GAME = "/newGame";
   public static final String SUBMIT_ROUND = "/submitRound";
   public static final String FINISH_GAME = "/finishGame";
+  public static final String HIGH_SCORES = "/highScores";
   public static final String AUTH_ENDPOINT = "/auth";
   public static final String REGISTER = "/register";
   public static final String LOGIN = "/login";

@@ -83,7 +83,7 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
   @Loggable
   @Override
   public boolean availability(UsernameAvailabilityRequest usernameAvailabilityRequest) {
-    String username = usernameAvailabilityRequest.getUsername();
+    String username = usernameAvailabilityRequest.getUserName();
 
     boolean isUsernameAvailable = databaseService.isUsernameAvailable(username);
 

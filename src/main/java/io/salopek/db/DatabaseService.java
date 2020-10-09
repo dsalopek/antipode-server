@@ -4,6 +4,7 @@ import io.salopek.entity.GameDataEntity;
 import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
 import io.salopek.entity.UserDataEntity;
+import io.salopek.model.HighScoreItem;
 
 import java.util.List;
 
@@ -41,4 +42,8 @@ public interface DatabaseService {
   boolean doesAccessTokenExist(String accessToken);
 
   boolean isUsernameAvailable(String username);
+
+  HighScoreItem getPersonalBestByUserName(String userName);
+
+  List<HighScoreItem> getTopTen();
 }
