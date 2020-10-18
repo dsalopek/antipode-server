@@ -8,6 +8,7 @@ import io.salopek.constant.PointType;
 import io.salopek.dao.DBDao;
 import io.salopek.dao.GameDataDAO;
 import io.salopek.dao.GameIdDAO;
+import io.salopek.dao.HighScoreDAO;
 import io.salopek.dao.PointDataDAO;
 import io.salopek.dao.RoundDataDAO;
 import io.salopek.dao.UserDataDAO;
@@ -41,6 +42,7 @@ class DatabaseServiceImplTest {
   private GameIdDAO gameIdDAO;
   private UserDataDAO userDataDAO;
   private DBDao dbDao;
+  private HighScoreDAO highScoreDao;
 
   @BeforeEach
   void setUp() throws Exception {
@@ -64,11 +66,12 @@ class DatabaseServiceImplTest {
     gameIdDAO = jdbi.onDemand(GameIdDAO.class);
     userDataDAO = jdbi.onDemand(UserDataDAO.class);
     dbDao = jdbi.onDemand(DBDao.class);
+    highScoreDao = jdbi.onDemand(HighScoreDAO.class);
 
     for (LifeCycle lc : environment.lifecycle().getManagedObjects()) {
       lc.start();
     }
-    databaseService = new DatabaseServiceImpl(gameDataDAO, roundDataDAO, pointDataDAO, gameIdDAO, userDataDAO, dbDao);
+    databaseService = new DatabaseServiceImpl(gameDataDAO, roundDataDAO, pointDataDAO, gameIdDAO, userDataDAO, dbDao, highScoreDao);
   }
 
   @AfterEach

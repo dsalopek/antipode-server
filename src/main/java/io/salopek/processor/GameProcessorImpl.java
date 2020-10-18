@@ -104,10 +104,8 @@ public class GameProcessorImpl implements GameProcessor {
 
   @Loggable
   private GameResultsResponse buildGameResultResponse(long gameId) {
-    GameDataEntity gameDataEntity = updateGameData(gameId);
-    long userId = gameDataEntity.getUserId();
+    updateGameData(gameId);
 
-    UserDataEntity userDataEntity = databaseService.getUserByUserId(userId);
     List<RoundDataEntity> roundDataEntities = databaseService.getRoundDataByGameId(gameId);
     List<Long> roundIds = roundDataEntities.stream().map(RoundDataEntity::getRoundId).collect(Collectors.toList());
     List<PointEntity> pointEntities = databaseService.getPointDataByRoundIds(roundIds);
@@ -130,7 +128,7 @@ public class GameProcessorImpl implements GameProcessor {
       completedRoundData.add(new CompletedRoundData(origin, antipode, submission, distance));
     }
 
-    return new GameResultsResponse(userDataEntity.getUserName(), completedRoundData, totalDistance);
+    return new GameResultsResponse(completedRoundData, totalDistance);
   }
 
   private GameDataEntity updateGameData(long gameId) {
