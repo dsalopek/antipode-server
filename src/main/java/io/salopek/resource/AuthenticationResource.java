@@ -6,6 +6,8 @@ import io.salopek.model.request.RegisterRequest;
 import io.salopek.model.request.UsernameAvailabilityRequest;
 import io.salopek.model.request.ValidateTokenRequest;
 import io.salopek.model.response.AccessTokenResponse;
+import io.salopek.model.response.UsernameAvailabilityResponse;
+import io.salopek.model.response.ValidateTokenResponse;
 import io.salopek.processor.AuthenticationProcessor;
 
 import javax.inject.Inject;
@@ -54,15 +56,15 @@ public class AuthenticationResource {
   @POST
   @Path(VALIDATE_TOKEN)
   public Response validateToken(@NotNull @Valid ValidateTokenRequest validateTokenRequest) {
-    authenticationProcessor.validateTokenRequest(validateTokenRequest);
-    return Response.ok().build();
+    ValidateTokenResponse response = authenticationProcessor.validateTokenRequest(validateTokenRequest);
+    return Response.ok(response).build();
   }
 
   @Loggable
   @POST
   @Path(AVAILABILITY)
   public Response availability(@NotNull @Valid UsernameAvailabilityRequest usernameAvailabilityRequest) {
-    authenticationProcessor.availability(usernameAvailabilityRequest);
-    return Response.ok().build();
+    UsernameAvailabilityResponse response = authenticationProcessor.availability(usernameAvailabilityRequest);
+    return Response.ok(response).build();
   }
 }

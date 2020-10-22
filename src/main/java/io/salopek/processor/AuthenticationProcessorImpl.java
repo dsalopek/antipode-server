@@ -9,6 +9,8 @@ import io.salopek.model.request.RegisterRequest;
 import io.salopek.model.request.UsernameAvailabilityRequest;
 import io.salopek.model.request.ValidateTokenRequest;
 import io.salopek.model.response.AccessTokenResponse;
+import io.salopek.model.response.UsernameAvailabilityResponse;
+import io.salopek.model.response.ValidateTokenResponse;
 import io.salopek.util.HashUtils;
 
 import javax.inject.Inject;
@@ -45,6 +47,7 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
     userData.setAccessToken(accessToken);
 
     databaseService.createNewUser(userData);
+
     return new AccessTokenResponse(accessToken);
   }
 
@@ -62,35 +65,27 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
     }
     String accessToken = HashUtils.randomHashByString(userData.getUserName());
     databaseService.updateAccessTokenByUserId(accessToken, userData.getUserId());
+
     return new AccessTokenResponse(accessToken);
   }
 
   @Loggable
   @Override
-  public boolean validateTokenRequest(ValidateTokenRequest validateTokenRequest) {
+  public ValidateTokenResponse validateTokenRequest(ValidateTokenRequest validateTokenRequest) {
 
     String accessToken = validateTokenRequest.getAccessToken();
-
     boolean isValidToken = databaseService.doesAccessTokenExist(accessToken);
 
-    if (!isValidToken) {
-      throw new NotFoundException(EXC_INVALID_TOKEN);
-    }
-
-    return true;
+    return new ValidateTokenResponse(isValidToken);
   }
 
   @Loggable
   @Override
-  public boolean availability(UsernameAvailabilityRequest usernameAvailabilityRequest) {
-    String username = usernameAvailabilityRequest.getUserName();
+  public UsernameAvailabilityResponse availability(UsernameAvailabilityRequest usernameAvailabilityRequest) {
 
+    String username = usernameAvailabilityRequest.getUserName();
     boolean isUsernameAvailable = databaseService.isUsernameAvailable(username);
 
-    if (!isUsernameAvailable) {
-      throw new BadRequestException(EXC_USERNAME_UNAVAIL);
-    }
-
-    return true;
+    return new UsernameAvailabilityResponse(isUsernameAvailable);
   }
 }

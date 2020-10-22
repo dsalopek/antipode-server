@@ -5,6 +5,8 @@ import io.salopek.model.request.RegisterRequest;
 import io.salopek.model.request.UsernameAvailabilityRequest;
 import io.salopek.model.request.ValidateTokenRequest;
 import io.salopek.model.response.AccessTokenResponse;
+import io.salopek.model.response.UsernameAvailabilityResponse;
+import io.salopek.model.response.ValidateTokenResponse;
 
 public interface AuthenticationProcessor {
 
@@ -12,7 +14,7 @@ public interface AuthenticationProcessor {
 
   AccessTokenResponse login(LoginRequest loginRequest);
 
-  boolean validateTokenRequest(ValidateTokenRequest validateTokenRequest);
+  ValidateTokenResponse validateTokenRequest(ValidateTokenRequest validateTokenRequest);
 
-  boolean availability(UsernameAvailabilityRequest usernameAvailabilityRequest);
+  UsernameAvailabilityResponse availability(UsernameAvailabilityRequest usernameAvailabilityRequest);
 }
