@@ -1,7 +1,6 @@
 package io.salopek.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.salopek.constant.AntipodeConstants;
 import io.salopek.model.response.ErrorMessageResponse;
 
 import javax.ws.rs.core.Response;

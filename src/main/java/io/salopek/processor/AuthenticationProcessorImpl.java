@@ -57,7 +57,7 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
 
     UserDataEntity userData = databaseService.getUserByUsername(loginRequest.getUserName());
     if (userData == null) {
-      throw new NotFoundException(EXC_USER_NOT_FOUND);
+      throw new BadRequestException(EXC_USER_NOT_FOUND);
     }
     BCrypt.Result result = BCrypt.verifyer().verify(loginRequest.getPassword().toCharArray(), userData.getPassword());
     if (!result.verified) {
