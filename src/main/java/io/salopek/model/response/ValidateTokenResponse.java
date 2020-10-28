@@ -2,27 +2,27 @@ package io.salopek.model.response;
 
 public class ValidateTokenResponse {
 
-  private boolean isValid;
+  private boolean valid;
 
   private ValidateTokenResponse() {
   }
 
-  public ValidateTokenResponse(boolean isValid) {
-    this.isValid = isValid;
+  public ValidateTokenResponse(boolean valid) {
+    this.valid = valid;
   }
 
   public boolean isValid() {
-    return isValid;
+    return valid;
   }
 
   public void setValid(boolean valid) {
-    isValid = valid;
+    this.valid = valid;
   }
 
   @Override
   public String toString() {
     return "ValidateTokenResponse{" +
-      "isValid=" + isValid +
+      "valid=" + valid +
       '}';
   }
 }

@@ -2,27 +2,27 @@ package io.salopek.model.response;
 
 public class UsernameAvailabilityResponse {
 
-  private boolean isAvailable;
+  private boolean available;
 
   private UsernameAvailabilityResponse() {
   }
 
-  public UsernameAvailabilityResponse(boolean isAvailable) {
-    this.isAvailable = isAvailable;
+  public UsernameAvailabilityResponse(boolean available) {
+    this.available = available;
   }
 
   public boolean isAvailable() {
-    return isAvailable;
+    return available;
   }
 
   public void setAvailable(boolean available) {
-    isAvailable = available;
+    this.available = available;
   }
 
   @Override
   public String toString() {
     return "UsernameAvailabilityResponse{" +
-      "isAvailable=" + isAvailable +
+      "available=" + available +
       '}';
   }
 }
