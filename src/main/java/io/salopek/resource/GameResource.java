@@ -58,7 +58,7 @@ public class GameResource {
   @Loggable
   @POST
   @Path(FINISH_GAME)
-  public Response finishGame(@NotNull @Valid RoundSubmissionRequest roundSubmissionRequest) {
+  public Response highScores(@NotNull @Valid RoundSubmissionRequest roundSubmissionRequest) {
     GameResultsResponse gameResultsResponse = gameProcessor.finishGame(roundSubmissionRequest);
     return Response.ok(gameResultsResponse).build();
   }
@@ -66,7 +66,7 @@ public class GameResource {
   @Loggable
   @GET
   @Path(HIGH_SCORES)
-  public Response finishGame(@Auth UserData userData) {
+  public Response highScores(@Auth UserData userData) {
     HighScoreResponse highScoreResponse = gameProcessor.highScores(userData);
     return Response.ok(highScoreResponse).build();
   }
