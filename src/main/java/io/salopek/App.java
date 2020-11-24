@@ -36,6 +36,8 @@ import io.salopek.util.DistanceCalculator;
 import io.salopek.util.HaversineDistanceCalculator;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.jdbi.v3.core.Jdbi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import javax.servlet.DispatcherType;

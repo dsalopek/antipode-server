@@ -1,0 +1,42 @@
+version: '3'
+services:
+  mysqldb:
+    image: mysql:8.0
+    restart: always
+    container_name: mysqldb
+    environment:
+      MYSQL_DATABASE: "antipode"
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+    volumes:
+    - ${MYSQL_DATA}:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - antipode-ntwk
+
+  antipode-service:
+    image: openjdk:8-jre
+    restart: always
+    build: .
+    container_name: antipode-service
+    environment:
+      DB_PASS: ${DB_PASS}
+      DB_URL: ${DB_URL}
+      DB_USER: ${DB_USER}
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    networks:
+      - antipode-ntwk
+    links:
+      - mysqldb
+    depends_on:
+      - mysqldb
+
+networks:
+  antipode-ntwk:
+    external:
+#      docker network create antipode-ntwk
+      name: antipode-ntwk
