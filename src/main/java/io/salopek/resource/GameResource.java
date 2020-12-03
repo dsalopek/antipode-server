@@ -58,7 +58,7 @@ public class GameResource {
   @Loggable
   @POST
   @Path(FINISH_GAME)
-  public Response highScores(@NotNull @Valid RoundSubmissionRequest roundSubmissionRequest) {
+  public Response finishGame(@NotNull @Valid RoundSubmissionRequest roundSubmissionRequest) {
     GameResultsResponse gameResultsResponse = gameProcessor.finishGame(roundSubmissionRequest);
     return Response.ok(gameResultsResponse).build();
   }
