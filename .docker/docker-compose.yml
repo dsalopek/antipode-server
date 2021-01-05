@@ -5,12 +5,12 @@ services:
     restart: always
     container_name: mysqldb
     environment:
-      MYSQL_DATABASE: "antipode"
+      MYSQL_DATABASE: ${DB_SCHEMA}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_ROOT_PASSWORD: ${DB_PASS}
     volumes:
-    - ${MYSQL_DATA}:/var/lib/mysql
+      - ${MYSQL_DATA}:/var/lib/mysql
     ports:
       - "3306:3306"
     networks:
@@ -40,5 +40,5 @@ services:
 networks:
   antipode-ntwk:
     external:
-#      docker network create antipode-ntwk
+      #      docker network create antipode-ntwk
       name: antipode-ntwk
