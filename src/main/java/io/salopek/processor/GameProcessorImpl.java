@@ -9,11 +9,13 @@ import io.salopek.entity.UserDataEntity;
 import io.salopek.logging.Loggable;
 import io.salopek.mapper.ModelMapper;
 import io.salopek.model.GameData;
+import io.salopek.model.HighScoreItem;
 import io.salopek.model.Point;
 import io.salopek.model.UserData;
 import io.salopek.model.request.RoundSubmissionRequest;
 import io.salopek.model.response.CompletedRoundData;
 import io.salopek.model.response.GameResultsResponse;
+import io.salopek.model.response.HighScoreResponse;
 import io.salopek.model.response.RoundResponse;
 import io.salopek.util.DistanceCalculator;
 import io.salopek.util.PointUtils;
@@ -71,6 +73,17 @@ public class GameProcessorImpl implements GameProcessor {
     return buildGameResultResponse(gameId);
   }
 
+  @Override
+  public HighScoreResponse highScores(UserData userData) {
+
+    String userName = userData.getUserName();
+
+    HighScoreItem personalBest = databaseService.getPersonalBestByUserName(userName);
+    List<HighScoreItem> topTen = databaseService.getTopTen();
+
+    return new HighScoreResponse(topTen, personalBest);
+  }
+
   private void processRoundSubmission(RoundSubmissionRequest roundSubmission) {
 
     Point antipode = PointUtils.calculateAntipode(roundSubmission.getOrigin());
@@ -91,10 +104,8 @@ public class GameProcessorImpl implements GameProcessor {
 
   @Loggable
   private GameResultsResponse buildGameResultResponse(long gameId) {
-    GameDataEntity gameDataEntity = updateGameData(gameId);
-    long userId = gameDataEntity.getUserId();
+    updateGameData(gameId);
 
-    UserDataEntity userDataEntity = databaseService.getUserByUserId(userId);
     List<RoundDataEntity> roundDataEntities = databaseService.getRoundDataByGameId(gameId);
     List<Long> roundIds = roundDataEntities.stream().map(RoundDataEntity::getRoundId).collect(Collectors.toList());
     List<PointEntity> pointEntities = databaseService.getPointDataByRoundIds(roundIds);
@@ -117,7 +128,7 @@ public class GameProcessorImpl implements GameProcessor {
       completedRoundData.add(new CompletedRoundData(origin, antipode, submission, distance));
     }
 
-    return new GameResultsResponse(userDataEntity.getUserName(), completedRoundData, totalDistance);
+    return new GameResultsResponse(completedRoundData, totalDistance);
   }
 
   private GameDataEntity updateGameData(long gameId) {

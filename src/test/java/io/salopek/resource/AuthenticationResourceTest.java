@@ -7,6 +7,7 @@ import io.salopek.model.request.LoginRequest;
 import io.salopek.model.request.RegisterRequest;
 import io.salopek.model.request.ValidateTokenRequest;
 import io.salopek.model.response.AccessTokenResponse;
+import io.salopek.model.response.ValidateTokenResponse;
 import io.salopek.processor.AuthenticationProcessor;
 import io.salopek.processor.AuthenticationProcessorImpl;
 import org.eclipse.jetty.http.HttpStatus;
@@ -91,11 +92,12 @@ class AuthenticationResourceTest {
   @Test
   void validate() {
     ValidateTokenRequest tokenRequest = new ValidateTokenRequest("abc123");
-    when(authenticationProcessor.validateTokenRequest(any())).thenReturn(true);
+    when(authenticationProcessor.validateTokenRequest(any())).thenReturn(new ValidateTokenResponse(true));
 
     Response response = ext.target(AUTH_ENDPOINT + VALIDATE_TOKEN).request().post(Entity.json(tokenRequest));
 
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK_200);
+    assertThat(response.readEntity(ValidateTokenResponse.class).isValid()).isEqualTo(true);
   }
 
   @Test
@@ -106,6 +108,7 @@ class AuthenticationResourceTest {
 
     Response response = extRealResource.target(AUTH_ENDPOINT + VALIDATE_TOKEN).request().post(Entity.json(tokenRequest));
 
-    assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND_404);
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.OK_200);
+    assertThat(response.readEntity(ValidateTokenResponse.class).isValid()).isEqualTo(false);
   }
 }

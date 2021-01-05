@@ -123,7 +123,7 @@ class GameResourceTest {
   void finishGame() {
     RoundSubmissionRequest roundSubmission = new RoundSubmissionRequest(UUID.randomUUID().toString(), new Point(), new Point());
     FinishGameRequest finishGameRequest = new FinishGameRequest("asdf-1234");
-    GameResultsResponse gameResultsResponse = new GameResultsResponse("player_name", completedRoundData(), 0);
+    GameResultsResponse gameResultsResponse = new GameResultsResponse(completedRoundData(), 0);
 
     when(gameProcessor.finishGame(any())).thenReturn(gameResultsResponse);
     when(databaseService.getUserByAccessToken(anyString())).thenReturn(new UserDataEntity(1L, "Dylan", "", ""));
