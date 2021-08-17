@@ -3,7 +3,6 @@ package io.salopek.processor;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import io.salopek.db.DatabaseService;
 import io.salopek.entity.UserDataEntity;
-import io.salopek.logging.Loggable;
 import io.salopek.model.request.LoginRequest;
 import io.salopek.model.request.RegisterRequest;
 import io.salopek.model.request.UsernameAvailabilityRequest;
@@ -32,7 +31,6 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
     this.databaseService = databaseService;
   }
 
-  @Loggable
   @Override
   public AccessTokenResponse register(RegisterRequest registerRequest) {
 
@@ -51,7 +49,6 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
     return new AccessTokenResponse(accessToken);
   }
 
-  @Loggable
   @Override
   public AccessTokenResponse login(LoginRequest loginRequest) {
 
@@ -69,7 +66,6 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
     return new AccessTokenResponse(accessToken);
   }
 
-  @Loggable
   @Override
   public ValidateTokenResponse validateTokenRequest(ValidateTokenRequest validateTokenRequest) {
 
@@ -79,7 +75,6 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
     return new ValidateTokenResponse(isValidToken);
   }
 
-  @Loggable
   @Override
   public UsernameAvailabilityResponse availability(UsernameAvailabilityRequest usernameAvailabilityRequest) {
 

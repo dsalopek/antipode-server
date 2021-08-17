@@ -1,6 +1,5 @@
 package io.salopek.resource;
 
-import io.salopek.logging.Loggable;
 import io.salopek.model.request.LoginRequest;
 import io.salopek.model.request.RegisterRequest;
 import io.salopek.model.request.UsernameAvailabilityRequest;
@@ -36,7 +35,6 @@ public class AuthenticationResource {
     this.authenticationProcessor = authenticationProcessor;
   }
 
-  @Loggable
   @POST
   @Path(REGISTER)
   public Response register(@NotNull @Valid RegisterRequest registerRequest) {
@@ -44,7 +42,6 @@ public class AuthenticationResource {
     return Response.ok(accessToken).build();
   }
 
-  @Loggable
   @POST
   @Path(LOGIN)
   public Response login(@NotNull @Valid LoginRequest loginRequest) {
@@ -52,7 +49,6 @@ public class AuthenticationResource {
     return Response.ok(accessToken).build();
   }
 
-  @Loggable
   @POST
   @Path(VALIDATE_TOKEN)
   public Response validateToken(@NotNull @Valid ValidateTokenRequest validateTokenRequest) {
@@ -60,7 +56,6 @@ public class AuthenticationResource {
     return Response.ok(response).build();
   }
 
-  @Loggable
   @POST
   @Path(AVAILABILITY)
   public Response availability(@NotNull @Valid UsernameAvailabilityRequest usernameAvailabilityRequest) {

@@ -1,7 +1,6 @@
 package io.salopek.util;
 
 import io.salopek.logging.LogUtils;
-import io.salopek.logging.Loggable;
 import io.salopek.model.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ public class PointUtils {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PointUtils.class);
 
-  @Loggable
   public static Point getRandomOrigin() {
     double latitude = RandomUtils.getRandomLatitude();
     double longitude = RandomUtils.getRandomLongitude();
@@ -29,7 +27,6 @@ public class PointUtils {
     return randomOrigin;
   }
 
-  @Loggable
   public static Point calculateAntipode(Point origin) {
     if (null == origin) {
       LOGGER.error("Origin is null");
