@@ -183,6 +183,8 @@
                         <exclude>io/salopek/entity/**/*</exclude>
                         <exclude>io/salopek/model/**/*</exclude>
                         <exclude>**/*ModelMapperImpl.class</exclude>
+                        <exclude>io/salopek/App*</exclude>
+                        <exclude>io/salopek/AppConfiguration*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
