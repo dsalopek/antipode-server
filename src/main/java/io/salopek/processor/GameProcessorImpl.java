@@ -6,7 +6,6 @@ import io.salopek.entity.GameDataEntity;
 import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
 import io.salopek.entity.UserDataEntity;
-import io.salopek.logging.Loggable;
 import io.salopek.mapper.ModelMapper;
 import io.salopek.model.GameData;
 import io.salopek.model.HighScoreItem;
@@ -46,7 +45,6 @@ public class GameProcessorImpl implements GameProcessor {
     this.gameIdCache = new ConcurrentHashMap<>();
   }
 
-  @Loggable
   public RoundResponse newGame(UserData userData) {
     String gameUUID = saveNewGame(new GameData(userData));
     Point point = PointUtils.getRandomOrigin();
@@ -54,7 +52,6 @@ public class GameProcessorImpl implements GameProcessor {
     return new RoundResponse(gameUUID, point);
   }
 
-  @Loggable
   public RoundResponse submitRound(RoundSubmissionRequest roundSubmissionRequest) {
     processRoundSubmission(roundSubmissionRequest);
     Point point = PointUtils.getRandomOrigin();
@@ -62,7 +59,6 @@ public class GameProcessorImpl implements GameProcessor {
     return new RoundResponse(roundSubmissionRequest.getGameUUID(), point);
   }
 
-  @Loggable
   public GameResultsResponse finishGame(RoundSubmissionRequest roundSubmissionRequest) {
 
     processRoundSubmission(roundSubmissionRequest);
@@ -102,7 +98,6 @@ public class GameProcessorImpl implements GameProcessor {
     savePointsFromRound(pointMap, roundId);
   }
 
-  @Loggable
   private GameResultsResponse buildGameResultResponse(long gameId) {
     updateGameData(gameId);
 

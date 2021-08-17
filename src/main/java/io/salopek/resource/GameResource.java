@@ -1,7 +1,6 @@
 package io.salopek.resource;
 
 import io.dropwizard.auth.Auth;
-import io.salopek.logging.Loggable;
 import io.salopek.model.UserData;
 import io.salopek.model.request.FinishGameRequest;
 import io.salopek.model.request.RoundSubmissionRequest;
@@ -38,7 +37,6 @@ public class GameResource {
     this.gameProcessor = gameProcessor;
   }
 
-  @Loggable
   @POST
   @Path(NEW_GAME)
   public Response newGame(@Auth UserData userData) {
@@ -46,7 +44,6 @@ public class GameResource {
     return Response.ok(roundResponse).build();
   }
 
-  @Loggable
   @POST
   @Path(SUBMIT_ROUND)
   public Response submitRound(@NotNull @Valid RoundSubmissionRequest roundSubmission) {
@@ -55,7 +52,6 @@ public class GameResource {
     return Response.ok(roundResponse).build();
   }
 
-  @Loggable
   @POST
   @Path(FINISH_GAME)
   public Response finishGame(@NotNull @Valid RoundSubmissionRequest roundSubmissionRequest) {
@@ -63,7 +59,6 @@ public class GameResource {
     return Response.ok(gameResultsResponse).build();
   }
 
-  @Loggable
   @GET
   @Path(HIGH_SCORES)
   public Response highScores(@Auth UserData userData) {
