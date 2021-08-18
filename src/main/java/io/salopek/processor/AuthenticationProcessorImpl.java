@@ -67,7 +67,7 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
     BCrypt.Result result = verifyPassword(loginRequest, userData);
     if (!result.verified) {
       LogBuilder lb = LogBuilder.get().log("Invalid credentials")
-        .kv(LogKeys.USER_ID, Optional.of(userData.getUserId()).orElse(-1L));
+        .kv(LogKeys.USER_ID, Optional.ofNullable(userData.getUserId()).orElse(-1L));
       LOGGER.error(lb.build());
       throw new BadRequestException(EXC_INVALID_CREDENTIALS);
     }
@@ -108,7 +108,7 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
 
   private BCrypt.Result verifyPassword(LoginRequest loginRequest, UserDataEntity userData) {
     String storedPassword = "";
-    if(null != userData) {
+    if (null != userData) {
       storedPassword = userData.getPassword();
     }
     return BCrypt.verifyer().verify(loginRequest.getPassword().toCharArray(), storedPassword);
