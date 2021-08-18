@@ -1,8 +1,13 @@
 package io.salopek.logging;
 
+import io.salopek.constant.LogKeys;
+import io.salopek.processor.GameProcessorImpl;
 import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LogUtils {
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogUtils.class);
 
   private LogUtils() {
   }
@@ -39,6 +44,11 @@ public class LogUtils {
     } else {
       return append(key, DELIMITER, (null == value ? "null" : replaceNewLine(value.toString())));
     }
+  }
+
+  public static <E extends Exception> void logException(E exception) {
+    LogBuilder lb = LogBuilder.get().log("Exception occurred").kv(LogKeys.MESSAGE, exception.getMessage());
+    LOGGER.error(lb.build());
   }
 
   private static String methodLog(String prefix, String methodName) {

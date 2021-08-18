@@ -5,6 +5,7 @@ public enum LogKeys {
   GAME_ID,
   IS_USERNAME_AVAILABLE,
   IS_VALIDATED,
+  MESSAGE,
   USER_ID;
 
   @Override
