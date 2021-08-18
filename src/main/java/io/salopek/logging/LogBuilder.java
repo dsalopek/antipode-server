@@ -19,6 +19,11 @@ public class LogBuilder {
     return this;
   }
 
+  public <C extends Enum<C>> LogBuilder kv(Enum<C> e, Object value) {
+    kv(e.toString(), value);
+    return this;
+  }
+
   public LogBuilder kv(String key, Object value) {
     append(LogUtils.logObject(key, value));
     return this;

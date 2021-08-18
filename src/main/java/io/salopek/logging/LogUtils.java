@@ -1,5 +1,7 @@
 package io.salopek.logging;
 
+import org.apache.commons.lang3.time.StopWatch;
+
 public class LogUtils {
 
   private LogUtils() {
@@ -13,6 +15,12 @@ public class LogUtils {
   private static final String MS = "ms";
   private static final String EXEC_TIME = "executionTime";
 
+  public static StopWatch stopWatch() {
+    StopWatch sw = new StopWatch();
+    sw.start();
+    return sw;
+  }
+
   public static String methodEntry(String methodName) {
     return methodLog(ENTRY, methodName);
   }
@@ -21,8 +29,8 @@ public class LogUtils {
     return methodLog(EXIT, methodName);
   }
 
-  public static String methodExit(String methodName, long executionTime) {
-    return append(methodLog(EXIT, methodName), SPACE, logExecutionTime(executionTime));
+  public static String methodExit(String methodName, StopWatch sw) {
+    return append(methodLog(EXIT, methodName), SPACE, logExecutionTime(sw));
   }
 
   public static String logObject(String key, Object value) {
@@ -41,8 +49,8 @@ public class LogUtils {
     return s;
   }
 
-  private static String logExecutionTime(long duration) {
-    return logObject(EXEC_TIME, duration + MS);
+  private static String logExecutionTime(StopWatch sw) {
+    return logObject(EXEC_TIME, sw.getTime() + MS);
   }
 
   private static String append(String... strings) {

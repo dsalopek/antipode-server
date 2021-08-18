@@ -1,11 +1,13 @@
 package io.salopek.processor;
 
+import io.salopek.constant.LogKeys;
 import io.salopek.constant.PointType;
 import io.salopek.db.DatabaseService;
 import io.salopek.entity.GameDataEntity;
 import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
-import io.salopek.entity.UserDataEntity;
+import io.salopek.logging.LogBuilder;
+import io.salopek.logging.LogUtils;
 import io.salopek.mapper.ModelMapper;
 import io.salopek.model.GameData;
 import io.salopek.model.HighScoreItem;
@@ -18,7 +20,10 @@ import io.salopek.model.response.HighScoreResponse;
 import io.salopek.model.response.RoundResponse;
 import io.salopek.util.DistanceCalculator;
 import io.salopek.util.PointUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.mapstruct.factory.Mappers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.sql.Timestamp;
@@ -38,6 +43,8 @@ public class GameProcessorImpl implements GameProcessor {
   private final ConcurrentMap<String, Long> gameIdCache;
   private static final ModelMapper MAPPER = Mappers.getMapper(ModelMapper.class);
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(GameProcessorImpl.class);
+
   @Inject
   public GameProcessorImpl(DistanceCalculator distanceCalculator, DatabaseService databaseService) {
     this.distanceCalculator = distanceCalculator;
@@ -45,38 +52,53 @@ public class GameProcessorImpl implements GameProcessor {
     this.gameIdCache = new ConcurrentHashMap<>();
   }
 
+  @Override
   public RoundResponse newGame(UserData userData) {
+    StopWatch sw = LogUtils.stopWatch();
     String gameUUID = saveNewGame(new GameData(userData));
     Point point = PointUtils.getRandomOrigin();
 
+    LogBuilder lb = LogBuilder.get().log("Starting new game").kv(LogKeys.USER_ID, userData.getUserId());
+    lb.log(LogUtils.methodExit("newGame", sw));
+    LOGGER.info(lb.build());
     return new RoundResponse(gameUUID, point);
   }
 
+  @Override
   public RoundResponse submitRound(RoundSubmissionRequest roundSubmissionRequest) {
+    StopWatch sw = LogUtils.stopWatch();
     processRoundSubmission(roundSubmissionRequest);
     Point point = PointUtils.getRandomOrigin();
 
+    LogBuilder lb = LogBuilder.get().log(LogUtils.methodExit("submitRound", sw));
+    LOGGER.info(lb.build());
     return new RoundResponse(roundSubmissionRequest.getGameUUID(), point);
   }
 
+  @Override
   public GameResultsResponse finishGame(RoundSubmissionRequest roundSubmissionRequest) {
-
+    StopWatch sw = LogUtils.stopWatch();
     processRoundSubmission(roundSubmissionRequest);
     String gameUUID = roundSubmissionRequest.getGameUUID();
     long gameId = getGameId(gameUUID);
     gameIdCache.remove(gameUUID);
 
+    LogBuilder lb = LogBuilder.get().log("Finishing game").kv(LogKeys.GAME_ID, gameId);
+    lb.log(LogUtils.methodExit("finishGame", sw));
+    LOGGER.info(lb.build());
     return buildGameResultResponse(gameId);
   }
 
   @Override
   public HighScoreResponse highScores(UserData userData) {
-
+    StopWatch sw = LogUtils.stopWatch();
     String userName = userData.getUserName();
 
     HighScoreItem personalBest = databaseService.getPersonalBestByUserName(userName);
     List<HighScoreItem> topTen = databaseService.getTopTen();
 
+    LogBuilder lb = LogBuilder.get().log(LogUtils.methodExit("highScores", sw));
+    LOGGER.info(lb.build());
     return new HighScoreResponse(topTen, personalBest);
   }
 
