@@ -65,9 +65,10 @@ public class AuthenticationProcessorImpl implements AuthenticationProcessor {
 
     UserDataEntity userData = databaseService.getUserByUsername(loginRequest.getUserName());
     BCrypt.Result result = verifyPassword(loginRequest, userData);
-    if (!result.verified) {
+    if (null == userData || !result.verified) {
+      long userId = userData == null ? -1L : userData.getUserId();
       LogBuilder lb = LogBuilder.get().log("Invalid credentials")
-        .kv(LogKeys.USER_ID, Optional.ofNullable(userData.getUserId()).orElse(-1L));
+        .kv(LogKeys.USER_ID, userId);
       LOGGER.error(lb.build());
       throw new BadRequestException(EXC_INVALID_CREDENTIALS);
     }
