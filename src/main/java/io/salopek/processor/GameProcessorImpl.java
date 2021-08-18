@@ -42,7 +42,6 @@ public class GameProcessorImpl implements GameProcessor {
   private final DatabaseService databaseService;
   private final ConcurrentMap<String, Long> gameIdCache;
   private static final ModelMapper MAPPER = Mappers.getMapper(ModelMapper.class);
-
   private static final Logger LOGGER = LoggerFactory.getLogger(GameProcessorImpl.class);
 
   @Inject

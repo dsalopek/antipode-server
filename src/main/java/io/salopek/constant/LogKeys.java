@@ -1,7 +1,10 @@
 package io.salopek.constant;
 
 public enum LogKeys {
+  ACCESS_TOKEN,
   GAME_ID,
+  IS_USERNAME_AVAILABLE,
+  IS_VALIDATED,
   USER_ID;
 
   @Override
