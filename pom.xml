@@ -182,6 +182,8 @@
                     <excludes>
                         <exclude>io/salopek/entity/**/*</exclude>
                         <exclude>io/salopek/model/**/*</exclude>
+                        <exclude>io/salopek/constant/**/*</exclude>
+                        <exclude>io/salopek/dao/**/*</exclude>
                         <exclude>**/*ModelMapperImpl.class</exclude>
                         <exclude>io/salopek/App*</exclude>
                         <exclude>io/salopek/AppConfiguration*</exclude>
