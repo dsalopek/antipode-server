@@ -1,6 +1,7 @@
 package io.salopek.logging;
 
 import io.salopek.model.Point;
+import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,9 +25,11 @@ class LogUtilsTest {
   @Test
   void methodExit_WithDuration() {
     String methodName = "method1";
-    long duration = 1234L;
+    StopWatch sw = LogUtils.stopWatch();
+    sw.stop();
+    long duration = sw.getTime();
 
-    assertThat(LogUtils.methodExit(methodName, duration)).isEqualTo("[EXIT] method=method1 executionTime=1234ms");
+    assertThat(LogUtils.methodExit(methodName, sw)).isEqualTo("[EXIT] method=method1 executionTime=" + duration + "ms");
   }
 
   @Test

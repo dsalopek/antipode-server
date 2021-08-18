@@ -17,7 +17,7 @@ class LogBuilderTest {
 
   @Test
   void logBuilderTest_NullAppend() {
-    LogBuilder lb = LogBuilder.get().log("").kv("", null).kv(null, null);
+    LogBuilder lb = LogBuilder.get().log("").kv("", null).kv("", null);
     String lbOutput = lb.build();
 
     String expectedOutput = "";
