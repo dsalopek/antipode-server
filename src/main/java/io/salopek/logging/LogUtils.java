@@ -1,6 +1,13 @@
 package io.salopek.logging;
 
+import io.salopek.constant.LogKeys;
+import io.salopek.processor.GameProcessorImpl;
+import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class LogUtils {
+  private static final Logger LOGGER = LoggerFactory.getLogger(LogUtils.class);
 
   private LogUtils() {
   }
@@ -13,6 +20,12 @@ public class LogUtils {
   private static final String MS = "ms";
   private static final String EXEC_TIME = "executionTime";
 
+  public static StopWatch stopWatch() {
+    StopWatch sw = new StopWatch();
+    sw.start();
+    return sw;
+  }
+
   public static String methodEntry(String methodName) {
     return methodLog(ENTRY, methodName);
   }
@@ -21,8 +34,8 @@ public class LogUtils {
     return methodLog(EXIT, methodName);
   }
 
-  public static String methodExit(String methodName, long executionTime) {
-    return append(methodLog(EXIT, methodName), SPACE, logExecutionTime(executionTime));
+  public static String methodExit(String methodName, StopWatch sw) {
+    return append(methodLog(EXIT, methodName), SPACE, logExecutionTime(sw));
   }
 
   public static String logObject(String key, Object value) {
@@ -33,6 +46,11 @@ public class LogUtils {
     }
   }
 
+  public static <E extends Exception> void logException(E exception) {
+    LogBuilder lb = LogBuilder.get().log("Exception occurred").kv(LogKeys.MESSAGE, exception.getMessage());
+    LOGGER.error(lb.build());
+  }
+
   private static String methodLog(String prefix, String methodName) {
     return append(prefix, SPACE, METHOD, DELIMITER, methodName);
   }
@@ -41,8 +59,8 @@ public class LogUtils {
     return s;
   }
 
-  private static String logExecutionTime(long duration) {
-    return logObject(EXEC_TIME, duration + MS);
+  private static String logExecutionTime(StopWatch sw) {
+    return logObject(EXEC_TIME, sw.getTime() + MS);
   }
 
   private static String append(String... strings) {

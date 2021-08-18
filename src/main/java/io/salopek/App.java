@@ -99,7 +99,7 @@ public class App extends Application<AppConfiguration> {
         bind(highScoreDAO).to(HighScoreDAO.class);
         bind(databaseService).to(DatabaseService.class);
         bind(GameProcessorImpl.class).to(GameProcessor.class).in(Singleton.class);
-        bind(AuthenticationProcessorImpl.class).to(AuthenticationProcessor.class);
+        bind(AuthenticationProcessorImpl.class).to(AuthenticationProcessor.class).in(Singleton.class);
         bind(HaversineDistanceCalculator.class).to(DistanceCalculator.class).in(Singleton.class);
         bind(DatabaseServiceImpl.class).to(DatabaseService.class).in(Singleton.class);
       }

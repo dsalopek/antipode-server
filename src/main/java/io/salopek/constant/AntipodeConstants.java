@@ -12,8 +12,7 @@ public class AntipodeConstants {
   public static final String EXC_GET_WRITER = "getWriter() has already been called on this response.";
   public static final String EXC_GET_OUTPUTSTREAM = "getOutputStream() has already been called on this response.";
   public static final String EXC_USER_EXISTS = "User already exists.";
-  public static final String EXC_USER_NOT_FOUND = "Username not found.";
-  public static final String EXC_INVALID_PASSWORD = "Invalid password.";
+  public static final String EXC_INVALID_CREDENTIALS = "Provided credentials are not valid";
   public static final String EXC_INVALID_TOKEN = "Invalid token.";
   public static final String EXC_USERNAME_UNAVAIL = "Username is already in use.";
 

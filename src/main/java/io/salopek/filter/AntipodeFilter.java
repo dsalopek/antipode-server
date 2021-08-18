@@ -2,6 +2,7 @@ package io.salopek.filter;
 
 import io.salopek.logging.LogBuilder;
 import io.salopek.logging.LogUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,7 @@ public class AntipodeFilter implements Filter {
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
     throws IOException, ServletException {
     if (request instanceof HttpServletRequest) {
-      long start = System.currentTimeMillis();
+      StopWatch sw = LogUtils.stopWatch();
 
       MultiReadHttpServletRequestWrapper wrappedRequest = new MultiReadHttpServletRequestWrapper(
         (HttpServletRequest) request);
@@ -49,7 +50,7 @@ public class AntipodeFilter implements Filter {
       String uri = wrappedRequest.getRequestURI();
 
       Thread.currentThread()
-        .setName(THREAD_PREFIX + Thread.currentThread().getId() + " " + REQUEST_ID + UUID.randomUUID().toString());
+        .setName(THREAD_PREFIX + Thread.currentThread().getId() + " " + REQUEST_ID + UUID.randomUUID());
 
       LogBuilder lb = LogBuilder.get().log(LogUtils.methodEntry(uri)).kv(HTTP_METHOD, method);
       if (!method.equals(HttpMethod.GET)) {
@@ -60,9 +61,7 @@ public class AntipodeFilter implements Filter {
 
       chain.doFilter(wrappedRequest, wrappedResponse);
 
-      long duration = System.currentTimeMillis() - start;
-
-      lb.log(LogUtils.methodExit(uri, duration)).kv(RESPONSE, maskKeyValues(new String(wrappedResponse.getCopy())))
+      lb.log(LogUtils.methodExit(uri, sw)).kv(RESPONSE, maskKeyValues(new String(wrappedResponse.getCopy())))
         .kv(STATUS, wrappedResponse.getStatus());
       LOGGER.info(lb.build());
     }

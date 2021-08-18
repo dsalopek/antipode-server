@@ -7,6 +7,7 @@ import io.salopek.entity.PointEntity;
 import io.salopek.entity.RoundDataEntity;
 import io.salopek.entity.UserDataEntity;
 import io.salopek.model.Point;
+import io.salopek.model.UserData;
 import io.salopek.model.request.FinishGameRequest;
 import io.salopek.model.request.RoundSubmissionRequest;
 import io.salopek.model.response.CompletedRoundData;
@@ -40,8 +41,10 @@ class GameProcessorImplTest {
   @Test
   void newGame() {
 
+    UserData ud = new UserData(1L, "asdf");
+
     when(databaseService.saveNewGame(any())).thenReturn(1L);
-    RoundResponse actualResponse = gameProcessor.newGame(null);
+    RoundResponse actualResponse = gameProcessor.newGame(ud);
 
     assertThat(actualResponse.getGameUUID()).isNotNull();
     assertThat(actualResponse.getOrigin()).isNotNull();
@@ -71,12 +74,13 @@ class GameProcessorImplTest {
 
     Point antipode = antipode();
     Point origin = antipode();
+    UserData ud = new UserData(1L, "asdf");
 
     when(distanceCalculator.getDistance(any(), any())).thenReturn(10000d);
     when(databaseService.saveNewRound(any())).thenReturn(1L);
     when(databaseService.getGameId(anyString())).thenReturn(1L);
     when(databaseService.saveNewPoint(any())).thenReturn(1L);
-    RoundResponse newGameResponse = gameProcessor.newGame(null);
+    RoundResponse newGameResponse = gameProcessor.newGame(ud);
     RoundSubmissionRequest roundSubmission = new RoundSubmissionRequest(newGameResponse.getGameUUID(), origin,
       antipode);
     assertDoesNotThrow(() -> gameProcessor.submitRound(roundSubmission));
