@@ -187,6 +187,7 @@
                         <exclude>**/*ModelMapperImpl.class</exclude>
                         <exclude>io/salopek/App*</exclude>
                         <exclude>io/salopek/AppConfiguration*</exclude>
+                        <exclude>io/salopek/di/**/*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
