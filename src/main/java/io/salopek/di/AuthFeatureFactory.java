@@ -13,9 +13,9 @@ import javax.inject.Inject;
 public class AuthFeatureFactory {
 
   @Inject
-  private DatabaseService databaseService;
+  private static DatabaseService databaseService;
 
-  public AuthDynamicFeature get() {
+  public static AuthDynamicFeature get() {
     if (null != databaseService) {
       return new AuthDynamicFeature(new OAuthCredentialAuthFilter.Builder<UserData>()
         .setAuthenticator(new CoreAuthenticator(databaseService))

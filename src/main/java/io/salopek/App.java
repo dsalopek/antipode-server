@@ -86,10 +86,7 @@ public class App extends Application<AppConfiguration> {
     environment.jersey().register(GameResource.class);
     environment.jersey().register(JerseyViolationExceptionMapper.class);
     environment.jersey().register(JsonProcessingExceptionMapper.class);
-
-    AuthFeatureFactory featureFactory = new AuthFeatureFactory();
-    environment.jersey().register(featureFactory.get());
-
+    environment.jersey().register(AuthFeatureFactory.get());
     environment.jersey().register(new AuthValueFactoryProvider.Binder<>(UserData.class));
   }
 }
