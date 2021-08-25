@@ -7,12 +7,14 @@ import io.salopek.processor.GameProcessorImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+
 public class AntipodeHealthCheck extends HealthCheck {
 
   private final DatabaseService databaseService;
   private static final Logger LOGGER = LoggerFactory.getLogger(AntipodeHealthCheck.class);
 
-
+  @Inject
   public AntipodeHealthCheck(DatabaseService databaseService) {
     this.databaseService = databaseService;
   }
