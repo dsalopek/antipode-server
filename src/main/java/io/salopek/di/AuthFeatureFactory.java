@@ -12,6 +12,9 @@ import javax.inject.Inject;
 
 public class AuthFeatureFactory {
 
+  private AuthFeatureFactory() {
+  }
+
   @Inject
   private static DatabaseService databaseService;
 
